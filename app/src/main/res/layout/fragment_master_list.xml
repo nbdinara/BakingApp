@@ -6,8 +6,8 @@
     tools:context=".MasterListFragment"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/lv_ingredients"
+    <TextView
+        android:id="@+id/tv_ingredients"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
 
