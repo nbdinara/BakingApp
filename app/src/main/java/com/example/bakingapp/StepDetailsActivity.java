@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 public class StepDetailsActivity extends AppCompatActivity {
 
@@ -12,10 +14,14 @@ public class StepDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_details);
 
-        StepDetailsFragment stepFragment = new StepDetailsFragment();
+        if (savedInstanceState == null) {
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+            StepDetailsFragment stepFragment = new StepDetailsFragment();
 
-        fragmentManager.beginTransaction().add(R.id.step_container, stepFragment).commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+
+            fragmentManager.beginTransaction().add(R.id.step_container, stepFragment).commit();
+        }
+
     }
 }
