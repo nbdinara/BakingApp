@@ -1,5 +1,9 @@
 package com.example.bakingapp.utilities;
 
+import android.content.Context;
+import android.util.JsonReader;
+import android.util.Log;
+
 import com.example.bakingapp.model.Ingredient;
 import com.example.bakingapp.model.Recipe;
 import com.example.bakingapp.model.Step;
@@ -8,8 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class JsonUtils {
 
@@ -33,7 +41,24 @@ public class JsonUtils {
 
 
 
-    public static List<Recipe> getRecipesArrayFromJson(String recipesJsonStr) {
+    private static String loadJSONFromAsset(Context context) {
+        String json;
+        try {
+            InputStream is = context.getAssets().open("baking.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+
+    public static ArrayList<Recipe> getRecipesArrayFromJson(Context context) {
 
         ArrayList<Recipe> parsedRecipes = new ArrayList<>();
         ArrayList<Ingredient> parsedIngredients = new ArrayList<>();
@@ -41,35 +66,37 @@ public class JsonUtils {
 
        // title, release date, movie poster, vote average, and plot synopsis.
         try {
-            JSONObject jsonObject = new JSONObject(recipesJsonStr);
-            JSONArray results = jsonObject.optJSONArray("");
-            assert results != null;
+            String recipesJsonStr = loadJSONFromAsset(context);
+            JSONArray results = new JSONArray(recipesJsonStr);
             for (int i = 0; i < results.length(); i++){
                 JSONObject recipe = results.optJSONObject(i);
                 int id = recipe.optInt(ID);
                 String name = recipe.optString(NAME);
                 JSONArray ingredients = recipe.optJSONArray(INGREDIENTS);
-                for (int j = 0; j < ingredients.length(); j++){
-                    JSONObject ingredient = ingredients.optJSONObject(j);
-                    double quantity = ingredient.optDouble(QUANTITY);
-                    String measure = ingredient.optString(MEASURE);
-                    String ingredientName = ingredient.optString(INGREDIENT);
-                    Ingredient mIngredient = new Ingredient(quantity, measure, ingredientName);
-                    parsedIngredients.add(mIngredient);
+                if (ingredients != null) {
+                    for (int j = 0; j < ingredients.length(); j++) {
+                        JSONObject ingredient = ingredients.optJSONObject(j);
+                        double quantity = ingredient.optDouble(QUANTITY);
+                        String measure = ingredient.optString(MEASURE);
+                        String ingredientName = ingredient.optString(INGREDIENT);
+                        Ingredient mIngredient = new Ingredient(quantity, measure, ingredientName);
+                        parsedIngredients.add(mIngredient);
+                    }
                 }
-
                 JSONArray steps = recipe.optJSONArray(STEPS);
-                for (int j = 0; j < steps.length(); j++){
-                    JSONObject step = ingredients.optJSONObject(j);
-                    int stepId = step.optInt(STEP_ID);
-                    String shortDescription = step.optString(SHORT_DESCRIPTION);
-                    String description = step.optString(DESCRIPTION);
-                    String videoURL = step.optString(VIDEO_URL);
-                    String thumbnailURL = step.optString(THUMBNAIL_URL);
-                    Step mStep = new Step(stepId, shortDescription, description, videoURL, thumbnailURL);
-                    parsedSteps.add(mStep);
+                if (steps != null) {
+                    for (int j = 0; j < steps.length(); j++) {
+                        JSONObject step = steps.optJSONObject(j);
+                        int stepId = step.optInt(STEP_ID);
+                        String shortDescription = step.optString(SHORT_DESCRIPTION);
+                        String description = step.optString(DESCRIPTION);
+                        String videoURL = step.optString(VIDEO_URL);
+                        String thumbnailURL = step.optString(THUMBNAIL_URL);
+                        Step mStep = new Step(stepId, shortDescription, description, videoURL, thumbnailURL);
+                        parsedSteps.add(mStep);
+                        Log.d(TAG, "description : " + description);
+                    }
                 }
-
 
                 int serving = recipe.optInt(SERVING);
                 String image = recipe.optString(IMAGE);

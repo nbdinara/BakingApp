@@ -35,7 +35,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         private final TextView mRecipeServingView;
         private final ProgressBar mProgressBar;
 
-        RecipeAdapterViewHolder(View view) {
+        private RecipeAdapterViewHolder(View view) {
             super(view);
             mRecipeNameView = view.findViewById(R.id.tv_recipe_name);
             mRecipeServingView = view.findViewById(R.id.tv_recipe_serving);
@@ -59,7 +59,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
     @NonNull
     @Override
-    public RecipeAdapter.RecipeAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecipeAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.recipe_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -74,7 +74,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
 
     @Override
-    public void onBindViewHolder(final RecipeAdapterViewHolder recipeAdapterViewHolder, int position) {
+    public void onBindViewHolder(RecipeAdapterViewHolder recipeAdapterViewHolder, int position) {
         String name = mRecipesData.get(position).getName();
         recipeAdapterViewHolder.mRecipeNameView.setText(name);
         int serving = mRecipesData.get(position).getServing();
@@ -94,7 +94,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         return mRecipesData.size();
     }
 
-    public void setMoviesData(List<Recipe> recipesData) {
+    public void setRecipesData(List<Recipe> recipesData) {
         mRecipesData = recipesData;
         notifyDataSetChanged();
     }
