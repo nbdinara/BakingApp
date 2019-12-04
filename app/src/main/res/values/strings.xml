@@ -2,5 +2,6 @@
     <string name="app_name">BakingApp</string>
     <string name="error_message">Can not load the data. An error has occurred.</string>
     <string name="tv_recipe_name_example">Cheesecake</string>
+    <string name="tv_recipe_serving_example">Serving: 6</string>
 
 </resources>

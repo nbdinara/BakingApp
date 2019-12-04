@@ -4,15 +4,29 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/tv_recipe_name"
+    <LinearLayout
+        android:id="@+id/recipe_list_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="invisible"
-        tools:text="@string/tv_recipe_name_example" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_recipe_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="@string/tv_recipe_name_example" />
+
+        <TextView
+            android:id="@+id/tv_recipe_serving"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="@string/tv_recipe_serving_example" />
+
+    </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/loading_each_recipe_name_indicator"
+        android:id="@+id/pb_loading_each_recipe_name_indicator"
         android:layout_height="42dp"
         android:layout_width="42dp"
         android:layout_gravity="center"
