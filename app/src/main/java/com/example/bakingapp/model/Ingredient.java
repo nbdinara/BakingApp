@@ -1,4 +1,4 @@
-package com.example.bakingapp;
+package com.example.bakingapp.model;
 
 public class Ingredient {
 
