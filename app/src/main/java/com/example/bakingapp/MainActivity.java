@@ -5,25 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.bakingapp.model.Recipe;
 import com.example.bakingapp.utilities.JsonUtils;
 
-import org.json.JSONException;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import static android.content.ContentValues.TAG;
 
 
@@ -100,11 +92,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     @Override
     public void onClick(Recipe recipe) {
         Context context = this;
-        Toast.makeText(context, recipe.getName(), Toast.LENGTH_SHORT)
-                .show();
+        Class destinationClass = RecipeDetailsActivity.class;
+        Intent intentToStartRecipeDetailActivity = new Intent(context, destinationClass);
+        //Log.d(TAG, "myrecipe name: " + recipe.getName());
+        //Log.d(TAG, "myrecipe step 3: " + recipe.getSteps().get(2).getDescription());
+        intentToStartRecipeDetailActivity.putExtra("recipe", recipe);
+        startActivity(intentToStartRecipeDetailActivity);
     }
-
-
-
-
 }

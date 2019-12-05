@@ -61,14 +61,14 @@ public class JsonUtils {
     public static ArrayList<Recipe> getRecipesArrayFromJson(Context context) {
 
         ArrayList<Recipe> parsedRecipes = new ArrayList<>();
-        ArrayList<Ingredient> parsedIngredients = new ArrayList<>();
-        ArrayList<Step> parsedSteps = new ArrayList<>();
 
        // title, release date, movie poster, vote average, and plot synopsis.
         try {
             String recipesJsonStr = loadJSONFromAsset(context);
             JSONArray results = new JSONArray(recipesJsonStr);
             for (int i = 0; i < results.length(); i++){
+                ArrayList<Ingredient> parsedIngredients = new ArrayList<>();
+                ArrayList<Step> parsedSteps = new ArrayList<>();
                 JSONObject recipe = results.optJSONObject(i);
                 int id = recipe.optInt(ID);
                 String name = recipe.optString(NAME);

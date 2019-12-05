@@ -73,7 +73,7 @@ public class StepDetailsFragment extends Fragment {
             nextButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mId < mSteps.size()){
+                    if (mId < mSteps.size()-1){
                         mId++;
                     } else {
                         Toast.makeText(getContext(), "This is the last step", Toast.LENGTH_LONG).show();
@@ -87,7 +87,7 @@ public class StepDetailsFragment extends Fragment {
         return rootView;
     }
 
-    public void setStep(ArrayList<Step> steps) {
+    public void setSteps(ArrayList<Step> steps) {
         mSteps = steps;
     }
 
@@ -98,7 +98,7 @@ public class StepDetailsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle currentState) {
-        currentState.putParcelableArrayList(STEPS_LIST, mSteps);
+        currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<Step>) mSteps);
         currentState.putInt(STEP_INDEX, mId);
     }
 
