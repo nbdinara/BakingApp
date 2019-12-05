@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.bakingapp.model.Ingredient;
 import com.example.bakingapp.model.Recipe;
 import com.example.bakingapp.model.Step;
 
@@ -24,7 +25,9 @@ public class MasterListFragment extends Fragment {
 
     private Recipe mRecipe;
     private List<Step> mSteps;
+    private ArrayList<Ingredient> mIngredients;
 
+    public static final String INGREDIENTS_LIST = "ingredients_list";
     public static final String STEPS_LIST = "steps_list";
     public static final String RECIPE = "recipe";
 
@@ -64,9 +67,12 @@ public class MasterListFragment extends Fragment {
         if (savedInstanceState != null) {
             mSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
             mRecipe = savedInstanceState.getParcelable(RECIPE);
+            mIngredients = savedInstanceState.getParcelableArrayList(INGREDIENTS_LIST);
         } else {
             mSteps = new ArrayList<>();
             mSteps = mRecipe.getSteps();
+            mIngredients = new ArrayList<>();
+            mIngredients = mRecipe.getIngredients();
         }
         MasterListAdapter mAdapter = new MasterListAdapter(getContext(), mSteps);
         View rootView =  inflater.inflate(R.layout.fragment_master_list, container, false);
@@ -74,6 +80,12 @@ public class MasterListFragment extends Fragment {
         ListView stepsListView =  rootView.findViewById(R.id.lv_steps);
 
         stepsListView.setAdapter(mAdapter);
+
+        MasterIngredientsListAdapter mIngredientsAdapter =
+                new MasterIngredientsListAdapter(getContext(), R.layout.ingredient_list_item, mIngredients);
+        ListView ingredientsListView = rootView.findViewById(R.id.lv_ingredients);
+
+        ingredientsListView.setAdapter(mIngredientsAdapter);
 
         stepsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -95,5 +107,6 @@ public class MasterListFragment extends Fragment {
     public void onSaveInstanceState(Bundle currentState) {
         currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<Step>) mSteps);
         currentState.putParcelable(RECIPE, mRecipe);
+        currentState.putParcelableArrayList(INGREDIENTS_LIST, (ArrayList<Ingredient>) mIngredients);
     }
 }
