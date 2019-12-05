@@ -1,12 +1,16 @@
 package com.example.bakingapp;
 
+import androidx.annotation.Dimension;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -27,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private TextView mErrorMessageDisplay;
     private RecipeAdapter mRecipeAdapter;
     ArrayList<Recipe> mRecipes;
-
+    private int NUMBER_OF_COLUMNS = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +42,19 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_all_recipes_indicator);
 
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        if (tabletSize) {
+            GridLayoutManager layoutManager
+                    = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
+            mRecyclerView.setLayoutManager(layoutManager);
 
-        mRecyclerView.setLayoutManager(layoutManager);
+        } else {
+
+            LinearLayoutManager layoutManager
+                    = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+            mRecyclerView.setLayoutManager(layoutManager);
+        }
 
         mRecipeAdapter = new RecipeAdapter(this);
         mRecyclerView.setAdapter(mRecipeAdapter);
