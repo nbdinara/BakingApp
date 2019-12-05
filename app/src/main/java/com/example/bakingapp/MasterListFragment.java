@@ -25,6 +25,9 @@ public class MasterListFragment extends Fragment {
     private Recipe mRecipe;
     private List<Step> mSteps;
 
+    public static final String STEPS_LIST = "steps_list";
+    public static final String RECIPE = "recipe";
+
     // Define a new interface OnImageClickListener that triggers a callback in the host activity
     OnImageClickListener mCallback;
 
@@ -38,10 +41,6 @@ public class MasterListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            mSteps = bundle.getParcelableArrayList("recipes");
-        }
 
         // This makes sure that the host activity has implemented the callback interface
         // If not, it throws an exception
@@ -62,9 +61,13 @@ public class MasterListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        mSteps = new ArrayList<>();
-        mSteps = mRecipe.getSteps();
+        if (savedInstanceState != null) {
+            mSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
+            mRecipe = savedInstanceState.getParcelable(RECIPE);
+        } else {
+            mSteps = new ArrayList<>();
+            mSteps = mRecipe.getSteps();
+        }
         MasterListAdapter mAdapter = new MasterListAdapter(getContext(), mSteps);
         View rootView =  inflater.inflate(R.layout.fragment_master_list, container, false);
         //  TextView ingredientsListView =  rootView.findViewById(R.id.tv_ingredients);
@@ -87,4 +90,10 @@ public class MasterListFragment extends Fragment {
         mRecipe = recipe;
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle currentState) {
+        currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<Step>) mSteps);
+        currentState.putParcelable(RECIPE, mRecipe);
+    }
 }
