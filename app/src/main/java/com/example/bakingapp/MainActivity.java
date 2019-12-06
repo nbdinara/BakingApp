@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -18,8 +21,12 @@ import android.widget.TextView;
 
 import com.example.bakingapp.model.Recipe;
 import com.example.bakingapp.utilities.JsonUtils;
+import com.example.bakingapp.utilities.NetworkUtils;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+
 import static android.content.ContentValues.TAG;
 
 
@@ -30,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessageDisplay;
     private RecipeAdapter mRecipeAdapter;
-    ArrayList<Recipe> mRecipes;
+    List<Recipe> mRecipes;
     private int NUMBER_OF_COLUMNS = 3;
 
     @Override
@@ -61,18 +68,17 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
         loadRecipesData();
 
+
     }
 
     public void loadRecipesData(){
-        mRecipes = JsonUtils.getRecipesArrayFromJson(getApplicationContext());
-        Log.d(TAG, "recipes array size: " + mRecipes.size());
-        if (mRecipes.size() != 0){
-            showRecipesData();
-            mRecipeAdapter.setRecipesData(mRecipes);
+        //mRecipes = JsonUtils.getRecipesArrayFromJson(getApplicationContext());
+        if(isOnline()) {
+            new FetchRecipesTask().execute();
         } else {
+            Log.d(TAG, "showerrormessage: ");
             showErrorMessage();
         }
-
     }
 
     public void showLoadingIndicator(){
@@ -111,5 +117,55 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         //Log.d(TAG, "myrecipe step 3: " + recipe.getSteps().get(2).getDescription());
         intentToStartRecipeDetailActivity.putExtra("recipe", recipe);
         startActivity(intentToStartRecipeDetailActivity);
+    }
+
+
+    class FetchRecipesTask extends AsyncTask<Void, Void, List<Recipe>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected List<Recipe> doInBackground(Void... params) {
+
+
+            URL recipesRequestUrl = NetworkUtils.buildUrl();
+
+            try {
+                String jsonRecipesResponse = NetworkUtils
+                        .getResponseFromHttpUrl(recipesRequestUrl);
+
+                mRecipes =  JsonUtils
+                        .getRecipesArrayFromJson(jsonRecipesResponse);
+
+                Log.d(TAG, "Simple json array size: " + mRecipes.size());
+                return mRecipes;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Recipe> mRecipes) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (mRecipes != null) {
+                mRecipeAdapter.setRecipesData(mRecipes);
+                showRecipesData();
+            } else {
+                showErrorMessage();
+            }
+        }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
