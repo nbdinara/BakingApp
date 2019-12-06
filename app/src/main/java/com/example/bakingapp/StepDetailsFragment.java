@@ -1,9 +1,11 @@
 package com.example.bakingapp;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Parcelable;
@@ -12,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,10 +49,13 @@ public class StepDetailsFragment extends Fragment {
 
     public static final String STEPS_LIST = "steps_list";
     public static final String STEP_INDEX = "step_index";
+    public static final String PLAYER_CURRENT_POS = "player_current_pos";
+    public static final String PLAYER_IS_READY = "player_is_ready";
+
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
-    private String mVideoURL;
-    private String mThumbnailURL;
+    private long mCurrentPosition;
+    private boolean isPlayerReady;
 
     public StepDetailsFragment() {
         // Required empty public constructor
@@ -62,6 +69,10 @@ public class StepDetailsFragment extends Fragment {
         if(savedInstanceState != null) {
             mId = savedInstanceState.getInt(STEP_INDEX);
             mSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
+            mCurrentPosition = savedInstanceState.getLong(PLAYER_CURRENT_POS);
+            isPlayerReady = savedInstanceState.getBoolean(PLAYER_IS_READY);
+        } else {
+            mCurrentPosition = -1;
         }
 
         // Inflate the layout for this fragment
@@ -72,19 +83,31 @@ public class StepDetailsFragment extends Fragment {
         Button nextButton = rootView.findViewById(R.id.btn_next);
 
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.media_player);
+        setVideo(mSteps.get(mId).getVideoURL(), mSteps.get(mId).getThumbnailURL());
+        if (mCurrentPosition != -1){
+            mExoPlayer.seekTo(mCurrentPosition);
+            mExoPlayer.setPlayWhenReady(isPlayerReady);
+        }
 
 
-        mVideoURL = mSteps.get(mId).getVideoURL();
-        mThumbnailURL = mSteps.get(mId).getThumbnailURL();
+        int orientation = getResources().getConfiguration().orientation;
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
 
-        if (isNotNullOrEmpty(mVideoURL)) {
-            initializePlayer(Uri.parse(mSteps.get(mId).getVideoURL()));
-        } else if (isNotNullOrEmpty(mThumbnailURL)){
-            initializePlayer(Uri.parse(mSteps.get(mId).getThumbnailURL()));
-        } else if (!isNotNullOrEmpty(mVideoURL) && !isNotNullOrEmpty(mThumbnailURL)){
-            //mPlayerView.setBackground(null);
-            mPlayerView.getVideoSurfaceView().setVisibility(View.GONE);
-            mPlayerView.setVisibility(View.GONE);
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE && !tabletSize) {
+            // In landscape
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayerView.getLayoutParams();
+            params.width=params.MATCH_PARENT;
+            params.height=params.MATCH_PARENT;
+            mPlayerView.setLayoutParams(params);
+
+           // mPlayerView.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+          //  mPlayerView.getLayoutParams().height = LinearLayout.LayoutParams.MATCH_PARENT;
+            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        }
+
+        if (tabletSize){
+            previousButton.setVisibility(View.GONE);
+            nextButton.setVisibility(View.GONE);
         }
 
         //imageView.setImageResource();
@@ -95,10 +118,13 @@ public class StepDetailsFragment extends Fragment {
                 public void onClick(View v) {
                     if (mId > 0){
                         mId--;
+                        releasePlayer();
+                        setVideo(mSteps.get(mId).getVideoURL(), mSteps.get(mId).getThumbnailURL());
+                        textView.setText(mSteps.get(mId).getDescription());
                     } else {
                         Toast.makeText(getContext(), "This is the first step", Toast.LENGTH_LONG).show();
                     }
-                    textView.setText(mSteps.get(mId).getDescription());
+
                 }
             });
 
@@ -107,10 +133,12 @@ public class StepDetailsFragment extends Fragment {
                 public void onClick(View v) {
                     if (mId < mSteps.size()-1){
                         mId++;
+                        releasePlayer();
+                        textView.setText(mSteps.get(mId).getDescription());
+                        setVideo(mSteps.get(mId).getVideoURL(), mSteps.get(mId).getThumbnailURL());
                     } else {
                         Toast.makeText(getContext(), "This is the last step", Toast.LENGTH_LONG).show();
                     }
-                    textView.setText(mSteps.get(mId).getDescription());
                 }
             });
         } else {
@@ -125,6 +153,23 @@ public class StepDetailsFragment extends Fragment {
         return false;
     }
 
+
+    public void setVideo (String videoURL, String thumbnailURL){
+        if (isNotNullOrEmpty(videoURL)) {
+            initializePlayer(Uri.parse(videoURL));
+            mPlayerView.getVideoSurfaceView().setVisibility(View.VISIBLE);
+            mPlayerView.setVisibility(View.VISIBLE);
+        } else if (isNotNullOrEmpty(thumbnailURL)){
+            initializePlayer(Uri.parse(thumbnailURL));
+            mPlayerView.getVideoSurfaceView().setVisibility(View.VISIBLE);
+            mPlayerView.setVisibility(View.VISIBLE);
+        } else if (!isNotNullOrEmpty(videoURL) && !isNotNullOrEmpty(thumbnailURL)){
+            //mPlayerView.setBackground(null);
+            mPlayerView.getVideoSurfaceView().setVisibility(View.GONE);
+            mPlayerView.setVisibility(View.GONE);
+        }
+
+    }
 
 
     private void initializePlayer(Uri mediaUri) {
@@ -164,6 +209,8 @@ public class StepDetailsFragment extends Fragment {
     public void onSaveInstanceState(Bundle currentState) {
         currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<Step>) mSteps);
         currentState.putInt(STEP_INDEX, mId);
+        currentState.putLong(PLAYER_CURRENT_POS, Math.max(0, mExoPlayer.getCurrentPosition()));
+        currentState.putBoolean(PLAYER_IS_READY, mExoPlayer.getPlayWhenReady());
     }
 
     @Override
