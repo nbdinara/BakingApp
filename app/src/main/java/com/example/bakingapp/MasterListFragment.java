@@ -68,15 +68,15 @@ public class MasterListFragment extends Fragment {
             mSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
             mRecipe = savedInstanceState.getParcelable(RECIPE);
             mIngredients = savedInstanceState.getParcelableArrayList(INGREDIENTS_LIST);
-        } else {
+        } else {/*
             mSteps = new ArrayList<>();
             mSteps = mRecipe.getSteps();
             mIngredients = new ArrayList<>();
-            mIngredients = mRecipe.getIngredients();
+            mIngredients = mRecipe.getIngredients();*/
         }
         MasterListAdapter mAdapter = new MasterListAdapter(getContext(), mSteps);
         View rootView =  inflater.inflate(R.layout.fragment_master_list, container, false);
-        //  TextView ingredientsListView =  rootView.findViewById(R.id.tv_ingredients);
+        //  TextView ingredientsListView =  rootView.findViewById(R.recipe_id.tv_ingredients);
         ListView stepsListView =  rootView.findViewById(R.id.lv_steps);
 
         stepsListView.setAdapter(mAdapter);
@@ -98,8 +98,10 @@ public class MasterListFragment extends Fragment {
         return rootView;
     }
 
-    public void setRecipe(Recipe recipe) {
+    public void setData(Recipe recipe, ArrayList<Ingredient> ingredients, ArrayList<Step> steps) {
         mRecipe = recipe;
+        mIngredients = ingredients;
+        mSteps = steps;
     }
 
 

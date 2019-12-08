@@ -26,7 +26,7 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
 
         SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         int recipeId = prefs.getInt(KEY_RECIPE_ID + appWidgetId, 0);
-        getRecipeById(recipeId);
+       // getRecipeById(recipeId);
         String ingredientsText = prefs.getString(KEY_INGREDIENTS_TEXT + appWidgetId,
                 "Something went wrong. Ingredients list is empty");
         Intent intent = new Intent(context, RecipeDetailsActivity.class);
@@ -61,8 +61,8 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    public static int getRecipeById(int recipeId){
-        return mRecipe;
-    }
+    //public static int getRecipeById(int recipeId){
+        //return mRecipe;
+    //}
 }
 

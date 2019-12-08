@@ -77,7 +77,7 @@ public class StepDetailsFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_step_details, container, false);
-        //ImageView imageView = rootView.findViewById(R.id.media_player);
+        //ImageView imageView = rootView.findViewById(R.recipe_id.media_player);
         final TextView textView = rootView.findViewById(R.id.tv_step_full_description);
         Button previousButton = rootView.findViewById(R.id.btn_previous);
         Button nextButton = rootView.findViewById(R.id.btn_next);

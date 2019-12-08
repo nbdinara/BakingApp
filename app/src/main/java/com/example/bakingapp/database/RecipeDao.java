@@ -15,10 +15,10 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipe")
     LiveData<List<Recipe>> loadAllRecipes();
 
-    @Query("SELECT * FROM recipe WHERE id = :id")
+    @Query("SELECT * FROM recipe WHERE recipe_id = :id")
     LiveData<Recipe> loadRecipeById(int id);
 
     @Insert
-    void insertRecipeTask(Recipe recipe);
+    void insertRecipe(Recipe recipe);
 
 }

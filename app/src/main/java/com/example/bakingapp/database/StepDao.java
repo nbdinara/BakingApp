@@ -18,5 +18,5 @@ public interface StepDao {
     LiveData<Step>loadStepByRecipeIdandStepId(int recipeId, int stepId);
 
     @Insert
-    void insertStepTask(Step step);
+    void insertStep(Step step);
 }

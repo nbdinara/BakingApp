@@ -1,7 +1,5 @@
 package com.example.bakingapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.PendingIntent;
@@ -19,10 +17,7 @@ import com.example.bakingapp.model.Ingredient;
 import com.example.bakingapp.model.Recipe;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
 
@@ -113,7 +108,7 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
         for (int i = 0; i < mRecipes.size(); i++){
             if (mRecipes.get(i).getName().equals(recipeName)){
                 mIngredients = mRecipes.get(i).getIngredients();
-                mRecipeId = mRecipes.get(i).getId();
+                mRecipeId = mRecipes.get(i).getRecipeId();
                 break;
             }
         }

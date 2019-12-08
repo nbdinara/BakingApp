@@ -13,9 +13,12 @@ import java.util.List;
 @Dao
 public interface IngredientDao {
 
-    @Query("SELECT * FROM ingredient WHERE recipe_id = :recipeId")
-    LiveData<List<Ingredient>> loadIngredientsByRecipeId(int recipeId);
+    @Query("SELECT * FROM ingredient WHERE recipe_id = :recipe_id")
+    LiveData<List<Ingredient>> loadIngredientsByRecipeId(int recipe_id);
+
+    @Query("SELECT * FROM ingredient")
+    LiveData<List<Ingredient>> loadIngredients();
 
     @Insert
-    void insertIngredientTask(Ingredient ingredient);
+    void insertIngredient(Ingredient ingredient);
 }

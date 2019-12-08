@@ -7,12 +7,17 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "ingredient", foreignKeys = @ForeignKey(
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "ingredient", indices = {@Index("recipe_id")},
+        foreignKeys = @ForeignKey(
         entity = Recipe.class,
-        parentColumns = "id",
-        childColumns = "recipe_id"))
+        parentColumns = "recipe_id",
+        childColumns = "recipe_id",
+        onDelete = CASCADE))
 
 public class Ingredient  implements Parcelable {
 
@@ -41,6 +46,15 @@ public class Ingredient  implements Parcelable {
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
+    }
+
+    @Ignore
+    public Ingredient(double quantity, String measure, String ingredient, int recipeId){
+        this.quantity = quantity;
+        this.measure = measure;
+        this.ingredient = ingredient;
+        this.recipeId = recipeId;
+
     }
 
     @Ignore

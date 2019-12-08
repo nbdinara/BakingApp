@@ -7,16 +7,22 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "step", foreignKeys = @ForeignKey(
         entity = Recipe.class,
-        parentColumns = "id",
-        childColumns = "recipe_id"))
+        parentColumns = "recipe_id",
+        childColumns = "recipe_id",
+        onDelete = CASCADE), indices = {@Index("recipe_id")})
 public class Step implements Parcelable {
 
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @ColumnInfo(name = "index")
+    private int index;
     @ColumnInfo(name = "short_description")
     private String shortDescription;
     @ColumnInfo(name = "description")
@@ -29,9 +35,10 @@ public class Step implements Parcelable {
     private int recipeId;
 
 
-    public Step (int id, String shortDescription, String description, String videoURL,
+    public Step (int id, int index, String shortDescription, String description, String videoURL,
                  String thumbnailURL, int recipeId){
         this.id = id;
+        this.index = index;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
@@ -41,7 +48,7 @@ public class Step implements Parcelable {
 
     @Ignore
     protected Step(Parcel in) {
-        id = in.readInt();
+        index = in.readInt();
         shortDescription  = in.readString();
         description = in.readString();
         videoURL = in.readString();
@@ -49,12 +56,23 @@ public class Step implements Parcelable {
     }
 
     @Ignore
-    public Step (int id, String shortDescription, String description, String videoURL, String thumbnailURL){
-        this.id = id;
+    public Step (int index, String shortDescription, String description, String videoURL, String thumbnailURL){
+        this.index = index;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
+    }
+
+    @Ignore
+    public Step (int index, String shortDescription, String description, String videoURL,
+                 String thumbnailURL, int recipeId){
+        this.index = index;
+        this.shortDescription = shortDescription;
+        this.description = description;
+        this.videoURL = videoURL;
+        this.thumbnailURL = thumbnailURL;
+        this.recipeId = recipeId;
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {
@@ -91,6 +109,10 @@ public class Step implements Parcelable {
 
     public int getRecipeId() {
         return recipeId;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     @Override
