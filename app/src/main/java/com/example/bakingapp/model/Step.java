@@ -3,15 +3,43 @@ package com.example.bakingapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "step", foreignKeys = @ForeignKey(
+        entity = Recipe.class,
+        parentColumns = "id",
+        childColumns = "recipe_id"))
 public class Step implements Parcelable {
 
+    @PrimaryKey(autoGenerate = false)
     private int id;
+    @ColumnInfo(name = "short_description")
     private String shortDescription;
+    @ColumnInfo(name = "description")
     private String description;
+    @ColumnInfo(name = "video_url")
     private String videoURL;
+    @ColumnInfo(name = "thumbnail_url")
     private String thumbnailURL;
+    @ColumnInfo(name = "recipe_id")
+    private int recipeId;
 
 
+    public Step (int id, String shortDescription, String description, String videoURL,
+                 String thumbnailURL, int recipeId){
+        this.id = id;
+        this.shortDescription = shortDescription;
+        this.description = description;
+        this.videoURL = videoURL;
+        this.thumbnailURL = thumbnailURL;
+        this.recipeId = recipeId;
+    }
+
+    @Ignore
     protected Step(Parcel in) {
         id = in.readInt();
         shortDescription  = in.readString();
@@ -20,6 +48,7 @@ public class Step implements Parcelable {
         thumbnailURL = in.readString();
     }
 
+    @Ignore
     public Step (int id, String shortDescription, String description, String videoURL, String thumbnailURL){
         this.id = id;
         this.shortDescription = shortDescription;
@@ -58,6 +87,10 @@ public class Step implements Parcelable {
 
     public String getThumbnailURL() {
         return thumbnailURL;
+    }
+
+    public int getRecipeId() {
+        return recipeId;
     }
 
     @Override

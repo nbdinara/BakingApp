@@ -11,4 +11,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
 
+    <string name="country_prompt">Choose a recipe</string>
+
+
 </resources>

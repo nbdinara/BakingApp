@@ -3,18 +3,39 @@ package com.example.bakingapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity(tableName = "recipe")
 public class Recipe implements Parcelable {
 
+    @PrimaryKey(autoGenerate = false)
     private int id;
+    @ColumnInfo(name = "name")
     private String name;
+    @Ignore
     private ArrayList<Ingredient> ingredients;
+    @Ignore
     private ArrayList<Step> steps;
+    @ColumnInfo(name = "serving")
     private int serving;
+    @ColumnInfo(name = "image")
     private String image;
 
+
+    public Recipe (int id, String name, int serving, String image){
+        this.id = id;
+        this.name = name;
+        this.serving = serving;
+        this.image = image;
+    }
+
+    @Ignore
     protected Recipe(Parcel in) {
         id = in.readInt();
         name  = in.readString();
@@ -25,6 +46,7 @@ public class Recipe implements Parcelable {
         image = in.readString();
     }
 
+    @Ignore
     public Recipe (int id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps,
                    int serving, String image){
         this.id = id;
