@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mDb = AppDatabase.getInstance(getApplicationContext());
 
         loadRecipesData();
+        loadIngredients();
+        loadRecipes();
+        loadIngredientsById();
     }
 
     private void setupViewModel() {
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
                 if (recipes.size()!= 0) {
                     showRecipesData();
                     mRecipeAdapter.setRecipesData(recipes);
+                    Log.d(TAG, "setUpVIewModel: " + recipes.get(0).getName());
 
                 }else{
                     showErrorMessage();
@@ -135,7 +139,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         //Log.d(TAG, "myrecipe name: " + recipe.getName());
         //Log.d(TAG, "myrecipe step 3: " + recipe.getSteps().get(2).getDescription());
         intentToStartRecipeDetailActivity.putExtra("recipe", recipe);
+        intentToStartRecipeDetailActivity.putExtra("recipe_id", recipe.getRecipe_id());
+        Log.d(TAG, "onClick: intentMain" + recipe.getRecipe_id() + recipe.getName());
         startActivity(intentToStartRecipeDetailActivity);
+
     }
 
 
@@ -194,10 +201,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
     public void checkIfMovieInDatabase(final Recipe recipe) {
 
-        Recipe mDbRecipe = new Recipe(recipe.getRecipeId(), recipe.getName(), recipe.getServing(), recipe.getImage());
-        final int id = mDbRecipe.getRecipeId();
+        Log.d(TAG, "checkIfMovieInDatabase: " + recipe.getRecipe_id());
+        Recipe mDbRecipe = new Recipe(recipe.getRecipe_id(), recipe.getName(), recipe.getServing(), recipe.getImage());
+        int id = mDbRecipe.getRecipe_id();
         MainIdViewModelFactory factory = new MainIdViewModelFactory(mDb, id);
-        final MainIdViewModel viewModel
+        MainIdViewModel viewModel
                 = ViewModelProviders.of(this, factory).get(MainIdViewModel.class);
         viewModel.getRecipe().observe(this, new Observer<Recipe>() {
             @Override
@@ -208,11 +216,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
                     public void run() {
                         if (mRecipe == null) {
                             mDb.recipeDao().insertRecipe(mDbRecipe);
+                            Log.d(TAG, "mDbRecipe: " + mDbRecipe.getName() + mDbRecipe.getRecipe_id());
                             List<Ingredient> ingredients = recipe.getIngredients();
                             List<Step> steps = recipe.getSteps();
                             for (Ingredient ingredient: ingredients){
                                 mDb.ingredientDao().insertIngredient(ingredient);
-                                Log.d(TAG, "I was here and inserted ingredient: " + ingredient.getId());
+                                Log.d(TAG, "I was here and inserted ingredient: " + ingredient.getId() + ingredient.getIngredient());
                             }
                             for (Step step: steps){
                                 mDb.stepDao().insertStep(step);
@@ -222,6 +231,59 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
                     }
                 });
 
+            }
+        });
+    }
+
+
+    private void loadIngredients() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
+            @Override
+            public void onChanged(@Nullable List<Ingredient> ingredients) {
+                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                if (ingredients.size()!= 0) {
+                    Log.d(TAG, "blyat: " + ingredients.get(0).getIngredient() +
+                            ingredients.get(0).getRecipeId() + " " + ingredients.get(0).getId());
+                    Log.d(TAG, "blyat 2: " + ingredients.get(1).getIngredient()+
+                            ingredients.get(0).getRecipeId()+ " " + ingredients.get(1).getId());
+                }
+            }
+        });
+    }
+
+
+    private void loadRecipes() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                if (recipes.size()!= 0) {
+                    Log.d(TAG, "suka: " + recipes.get(0).getName() +
+                            recipes.get(0).getRecipe_id());
+                    Log.d(TAG, "suka 2: " + recipes.get(1).getName()+
+                            recipes.get(1).getRecipe_id());
+                }
+            }
+        });
+    }
+
+    private void loadIngredientsById() {
+        int id = 1;
+        MainIdViewModelFactory factory = new MainIdViewModelFactory(mDb, id);
+        final MainIdViewModel viewModel
+                = ViewModelProviders.of(this, factory).get(MainIdViewModel.class);
+        viewModel.getIngredients().observe(this, new Observer<List<Ingredient>>() {
+            @Override
+            public void onChanged(@Nullable List<Ingredient> ingredients) {
+                Log.d(TAG, "gruzhu po id ingr");
+                if (ingredients.size()!= 0) {
+                    Log.d(TAG, "tvvar: " + ingredients.get(0).getIngredient() +
+                            ingredients.get(0).getRecipeId());
+                    Log.d(TAG, "tvaar 2: " + ingredients.get(1).getIngredient()+
+                            ingredients.get(1).getRecipeId());
+                }
             }
         });
     }

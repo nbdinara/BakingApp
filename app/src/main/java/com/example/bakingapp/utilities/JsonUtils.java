@@ -40,7 +40,6 @@ public class JsonUtils {
     private static final String IMAGE = "image";
 
 
-
     private static String loadJSONFromAsset(Context context) {
         String json;
         try {
@@ -71,7 +70,8 @@ public class JsonUtils {
                 ArrayList<Ingredient> parsedIngredients = new ArrayList<>();
                 ArrayList<Step> parsedSteps = new ArrayList<>();
                 JSONObject recipe = results.optJSONObject(i);
-                int id = recipe.optInt(ID);
+                int recipe_id = recipe.optInt(ID);
+                Log.d(TAG, "getRecipesArrayFromJson: " +recipe_id );
                 String name = recipe.optString(NAME);
                 JSONArray ingredients = recipe.optJSONArray(INGREDIENTS);
                 if (ingredients != null) {
@@ -80,8 +80,8 @@ public class JsonUtils {
                         double quantity = ingredient.optDouble(QUANTITY);
                         String measure = ingredient.optString(MEASURE);
                         String ingredientName = ingredient.optString(INGREDIENT);
-                        Ingredient mIngredient = new Ingredient(0, quantity, measure,
-                                ingredientName, id);
+                        Ingredient mIngredient = new Ingredient(quantity, measure,
+                                ingredientName, recipe_id);
                         parsedIngredients.add(mIngredient);
                     }
                 }
@@ -94,8 +94,8 @@ public class JsonUtils {
                         String description = step.optString(DESCRIPTION);
                         String videoURL = step.optString(VIDEO_URL);
                         String thumbnailURL = step.optString(THUMBNAIL_URL);
-                        Step mStep = new Step(0, stepIndex, shortDescription, description,
-                                videoURL, thumbnailURL, id);
+                        Step mStep = new Step(stepIndex, shortDescription, description,
+                                videoURL, thumbnailURL, recipe_id);
                         parsedSteps.add(mStep);
                         Log.d(TAG, "description : " + description);
                     }
@@ -104,8 +104,9 @@ public class JsonUtils {
                 int serving = recipe.optInt(SERVING);
                 String image = recipe.optString(IMAGE);
 
-                Recipe mRecipe = new Recipe(id, name, parsedIngredients, parsedSteps, serving, image);
+                Recipe mRecipe = new Recipe(recipe_id, name, parsedIngredients, parsedSteps, serving, image);
                 parsedRecipes.add(mRecipe);
+                Log.d(TAG, "getRecipesArrayFromJson: recipe_id" + mRecipe.getRecipe_id());
             }
 
         } catch (JSONException e) {

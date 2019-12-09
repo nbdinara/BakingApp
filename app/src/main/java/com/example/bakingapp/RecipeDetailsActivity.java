@@ -26,9 +26,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
     private Recipe mRecipe;
     private boolean mTwoPane;
     private ArrayList<Ingredient> mIngredients;
-    private ArrayList<Step> mSteps;
+    private ArrayList<Step> mSteps  = new ArrayList<>();
 
     private AppDatabase mDb;
+    int id;
+    int recipeId;
+    MasterListFragment masterListFragment;
 
 
     @Override
@@ -36,15 +39,15 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
-
-
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null) {
             mRecipe = intentThatStartedThisActivity.getParcelableExtra("recipe");
+            id = intentThatStartedThisActivity.getIntExtra("recipe_id", -1);
+            Log.d(TAG, "intent send: " + mRecipe.getName() + mRecipe.getRecipe_id() + "///" + id);
+            masterListFragment = new MasterListFragment();
+            masterListFragment.setData(mRecipe);
         }
 
-        loadStepsFromDb(mRecipe.getRecipeId());
-        loadIngredientsFromDb(mRecipe.getRecipeId());
 
 
         if (findViewById(R.id.divider)!=null){
@@ -62,13 +65,15 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
 
         Log.d(TAG, "mRecipe steps: " + mSteps.size());
 
-        MasterListFragment masterListFragment = new MasterListFragment();
-        masterListFragment.setData(mRecipe, mIngredients, mSteps);
+
+//        Log.d(TAG, "onCreatechto: " + mIngredients.size());
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction()
                 .add(R.id.recipe_container, masterListFragment)
                 .commit();
+
+
 
     }
 
@@ -92,35 +97,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
         }
     }
 
-    public void loadIngredientsFromDb(int recipe_id){
-        mIngredients = new ArrayList<>();
-        RecipeDetailViewModelFactory factory = new RecipeDetailViewModelFactory(mDb, recipe_id);
-        final RecipeDetailsViewModel viewModel
-                = ViewModelProviders.of(this, factory).get(RecipeDetailsViewModel.class);
-        Log.d(TAG, "I am here");
-        viewModel.getIngredients().observe(this, new Observer <List<Ingredient>>() {
-            @Override
-            public void onChanged(@Nullable final List<Ingredient> ingredients) {
-                mIngredients = (ArrayList<Ingredient>)ingredients;
-            }
-        });
-
-
-    }
-
-    public void loadStepsFromDb(int recipe_id){
-        mSteps = new ArrayList<>();
-        RecipeDetailViewModelFactory factory = new RecipeDetailViewModelFactory(mDb, recipe_id);
-        final RecipeDetailsViewModel viewModel
-                = ViewModelProviders.of(this, factory).get(RecipeDetailsViewModel.class);
-        Log.d(TAG, "I am here");
-        viewModel.getSteps().observe(this, new Observer<List<Step>>() {
-            @Override
-            public void onChanged(@Nullable final List<Step> steps) {
-                mSteps = (ArrayList<Step>) steps;
-            }
-        });
-    }
 
 
 }

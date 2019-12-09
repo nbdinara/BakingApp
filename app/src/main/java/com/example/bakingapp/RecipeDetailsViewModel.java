@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.bakingapp.database.AppDatabase;
 import com.example.bakingapp.model.Ingredient;
+import com.example.bakingapp.model.Recipe;
 import com.example.bakingapp.model.Step;
 import java.util.List;
 
@@ -30,3 +31,4 @@ public class RecipeDetailsViewModel extends ViewModel {
         return steps;
     }
 }
+

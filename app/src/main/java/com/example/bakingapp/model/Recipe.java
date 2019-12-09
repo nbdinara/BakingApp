@@ -14,8 +14,7 @@ import java.util.ArrayList;
 public class Recipe implements Parcelable {
 
     @PrimaryKey(autoGenerate = false)
-    @ColumnInfo(name = "recipe_id")
-    public int recipe_id;
+    private int recipe_id;
     @ColumnInfo(name = "name")
     private String name;
     @Ignore
@@ -39,10 +38,7 @@ public class Recipe implements Parcelable {
     protected Recipe(Parcel in) {
         recipe_id = in.readInt();
         name  = in.readString();
-        ingredients = in.readArrayList(Ingredient.class.getClassLoader());
-        steps = in.readArrayList(Step.class.getClassLoader());
         serving = in.readInt();
-        recipe_id = in.readInt();
         image = in.readString();
     }
 
@@ -83,7 +79,7 @@ public class Recipe implements Parcelable {
     }
 
 
-    public int getRecipeId() {
+    public int getRecipe_id() {
         return recipe_id;
     }
 
@@ -112,8 +108,6 @@ public class Recipe implements Parcelable {
 
         parcel.writeInt(recipe_id);
         parcel.writeString(name);
-        parcel.writeList(ingredients);
-        parcel.writeList(steps);
         parcel.writeInt(serving);
         parcel.writeString(image);
     }

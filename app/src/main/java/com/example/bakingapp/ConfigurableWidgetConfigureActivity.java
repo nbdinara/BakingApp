@@ -108,7 +108,7 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
         for (int i = 0; i < mRecipes.size(); i++){
             if (mRecipes.get(i).getName().equals(recipeName)){
                 mIngredients = mRecipes.get(i).getIngredients();
-                mRecipeId = mRecipes.get(i).getRecipeId();
+                mRecipeId = mRecipes.get(i).getRecipe_id();
                 break;
             }
         }

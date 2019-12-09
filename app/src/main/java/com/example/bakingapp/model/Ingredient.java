@@ -59,9 +59,12 @@ public class Ingredient  implements Parcelable {
 
     @Ignore
     protected Ingredient(Parcel in) {
+        this.id = in.readInt();
         quantity = in.readDouble();
         measure  = in.readString();
         ingredient = in.readString();
+        this.recipeId = in.readInt();
+
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
@@ -104,8 +107,10 @@ public class Ingredient  implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeDouble(quantity);
         parcel.writeString(measure);
         parcel.writeString(ingredient);
+        parcel.writeInt(recipeId);
     }
 }
