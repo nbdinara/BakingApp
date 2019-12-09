@@ -7,12 +7,17 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "ingredient", foreignKeys = @ForeignKey(
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "ingredient", indices = {@Index("recipe_id")},
+        foreignKeys = @ForeignKey(
         entity = Recipe.class,
         parentColumns = "id",
-        childColumns = "recipe_id"))
+        childColumns = "recipe_id",
+        onDelete = CASCADE))
 
 public class Ingredient  implements Parcelable {
 
@@ -45,9 +50,11 @@ public class Ingredient  implements Parcelable {
 
     @Ignore
     protected Ingredient(Parcel in) {
+        this.id = in.readInt();
         quantity = in.readDouble();
         measure  = in.readString();
         ingredient = in.readString();
+        this.recipeId = in.readInt();
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
@@ -90,8 +97,10 @@ public class Ingredient  implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeDouble(quantity);
         parcel.writeString(measure);
         parcel.writeString(ingredient);
+        parcel.writeInt(recipeId);
     }
 }

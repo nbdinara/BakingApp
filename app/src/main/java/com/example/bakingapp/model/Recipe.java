@@ -19,9 +19,9 @@ public class Recipe implements Parcelable {
     @ColumnInfo(name = "name")
     private String name;
     @Ignore
-    private ArrayList<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
     @Ignore
-    private ArrayList<Step> steps;
+    private List<Step> steps;
     @ColumnInfo(name = "serving")
     private int serving;
     @ColumnInfo(name = "image")
@@ -39,10 +39,9 @@ public class Recipe implements Parcelable {
     protected Recipe(Parcel in) {
         id = in.readInt();
         name  = in.readString();
-        ingredients = in.readArrayList(Ingredient.class.getClassLoader());
-        steps = in.readArrayList(Step.class.getClassLoader());
+        ingredients = in.readParcelableList(ingredients, Ingredient.class.getClassLoader());
+        steps = in.readParcelableList(steps, Step.class.getClassLoader());
         serving = in.readInt();
-        id = in.readInt();
         image = in.readString();
     }
 
@@ -84,11 +83,11 @@ public class Recipe implements Parcelable {
         return name;
     }
 
-    public ArrayList<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public ArrayList<Step> getSteps() {
+    public List<Step> getSteps() {
         return steps;
     }
 
@@ -105,8 +104,8 @@ public class Recipe implements Parcelable {
 
         parcel.writeInt(id);
         parcel.writeString(name);
-        parcel.writeList(ingredients);
-        parcel.writeList(steps);
+        parcel.writeParcelableList(new ArrayList(ingredients), i);
+        parcel.writeParcelableList(new ArrayList(steps), i);
         parcel.writeInt(serving);
         parcel.writeString(image);
     }

@@ -16,6 +16,9 @@ public interface IngredientDao {
     @Query("SELECT * FROM ingredient WHERE recipe_id = :recipeId")
     LiveData<List<Ingredient>> loadIngredientsByRecipeId(int recipeId);
 
+    @Query("SELECT * FROM ingredient")
+    LiveData<List<Ingredient>> loadAllIngredients();
+
     @Insert
-    void insertIngredientTask(Ingredient ingredient);
+    void insertIngredient(Ingredient ingredient);
 }

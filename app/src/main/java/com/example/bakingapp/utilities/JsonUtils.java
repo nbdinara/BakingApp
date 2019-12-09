@@ -1,7 +1,6 @@
 package com.example.bakingapp.utilities;
 
 import android.content.Context;
-import android.util.JsonReader;
 import android.util.Log;
 
 import com.example.bakingapp.model.Ingredient;
@@ -60,7 +59,7 @@ public class JsonUtils {
 
     public static List<Recipe> getRecipesArrayFromJson(String recipesJsonString) {
 
-        ArrayList<Recipe> parsedRecipes = new ArrayList<>();
+        List<Recipe> parsedRecipes = new ArrayList<>();
 
        // title, release date, movie poster, vote average, and plot synopsis.
         try {
@@ -80,7 +79,7 @@ public class JsonUtils {
                         double quantity = ingredient.optDouble(QUANTITY);
                         String measure = ingredient.optString(MEASURE);
                         String ingredientName = ingredient.optString(INGREDIENT);
-                        Ingredient mIngredient = new Ingredient(quantity, measure, ingredientName);
+                        Ingredient mIngredient = new Ingredient(0, quantity, measure, ingredientName, id);
                         parsedIngredients.add(mIngredient);
                     }
                 }
@@ -88,12 +87,13 @@ public class JsonUtils {
                 if (steps != null) {
                     for (int j = 0; j < steps.length(); j++) {
                         JSONObject step = steps.optJSONObject(j);
-                        int stepId = step.optInt(STEP_ID);
+                        int step_order = step.optInt(STEP_ID);
                         String shortDescription = step.optString(SHORT_DESCRIPTION);
                         String description = step.optString(DESCRIPTION);
                         String videoURL = step.optString(VIDEO_URL);
                         String thumbnailURL = step.optString(THUMBNAIL_URL);
-                        Step mStep = new Step(stepId, shortDescription, description, videoURL, thumbnailURL);
+                        Step mStep = new Step(0, step_order, shortDescription, description, videoURL, thumbnailURL,
+                                id);
                         parsedSteps.add(mStep);
                         Log.d(TAG, "description : " + description);
                     }

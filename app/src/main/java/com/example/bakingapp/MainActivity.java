@@ -1,6 +1,5 @@
 package com.example.bakingapp;
 
-import androidx.annotation.Dimension;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,12 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -24,7 +21,6 @@ import com.example.bakingapp.utilities.JsonUtils;
 import com.example.bakingapp.utilities.NetworkUtils;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;

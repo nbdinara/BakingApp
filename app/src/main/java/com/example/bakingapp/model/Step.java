@@ -7,16 +7,24 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "step", foreignKeys = @ForeignKey(
+import static androidx.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "step", indices = {@Index("recipe_id")},
+        foreignKeys = @ForeignKey(
         entity = Recipe.class,
         parentColumns = "id",
-        childColumns = "recipe_id"))
+        childColumns = "recipe_id",
+        onDelete = CASCADE))
+
 public class Step implements Parcelable {
 
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @ColumnInfo(name = "step_order")
+    private int stepOrder;
     @ColumnInfo(name = "short_description")
     private String shortDescription;
     @ColumnInfo(name = "description")
@@ -29,9 +37,10 @@ public class Step implements Parcelable {
     private int recipeId;
 
 
-    public Step (int id, String shortDescription, String description, String videoURL,
+    public Step (int id, int stepOrder, String shortDescription, String description, String videoURL,
                  String thumbnailURL, int recipeId){
         this.id = id;
+        this.stepOrder = stepOrder;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
@@ -42,15 +51,18 @@ public class Step implements Parcelable {
     @Ignore
     protected Step(Parcel in) {
         id = in.readInt();
+        stepOrder = in.readInt();
         shortDescription  = in.readString();
         description = in.readString();
         videoURL = in.readString();
         thumbnailURL = in.readString();
+        recipeId = in.readInt();
     }
 
     @Ignore
-    public Step (int id, String shortDescription, String description, String videoURL, String thumbnailURL){
+    public Step (int id, int stepOrder, String shortDescription, String description, String videoURL, String thumbnailURL){
         this.id = id;
+        this.stepOrder = stepOrder;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
@@ -71,6 +83,10 @@ public class Step implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public int getStepOrder() {
+        return stepOrder;
     }
 
     public String getShortDescription() {
@@ -102,10 +118,12 @@ public class Step implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
 
         parcel.writeInt(id);
+        parcel.writeInt(stepOrder);
         parcel.writeString(shortDescription);
         parcel.writeString(description);
         parcel.writeString(videoURL);
         parcel.writeString(thumbnailURL);
+        parcel.writeInt(recipeId);
     }
 
 }

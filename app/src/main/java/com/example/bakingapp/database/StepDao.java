@@ -17,6 +17,9 @@ public interface StepDao {
     @Query("SELECT * FROM step WHERE recipe_id = :recipeId AND id = :stepId")
     LiveData<Step>loadStepByRecipeIdandStepId(int recipeId, int stepId);
 
+    @Query("SELECT * FROM step")
+    LiveData<Step>loadAllSteps();
+
     @Insert
-    void insertStepTask(Step step);
+    void insertStep(Step step);
 }

@@ -19,6 +19,6 @@ public interface RecipeDao {
     LiveData<Recipe> loadRecipeById(int id);
 
     @Insert
-    void insertRecipeTask(Recipe recipe);
+    void insertRecipe(Recipe recipe);
 
 }
