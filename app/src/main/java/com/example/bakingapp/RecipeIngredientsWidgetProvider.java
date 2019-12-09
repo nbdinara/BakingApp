@@ -6,10 +6,21 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.RemoteViews;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.example.bakingapp.database.AppDatabase;
 import com.example.bakingapp.model.Recipe;
 
+import java.util.Random;
+
+import static android.content.ContentValues.TAG;
 import static com.example.bakingapp.ConfigurableWidgetConfigureActivity.KEY_INGREDIENTS_TEXT;
 import static com.example.bakingapp.ConfigurableWidgetConfigureActivity.KEY_RECIPE_ID;
 import static com.example.bakingapp.ConfigurableWidgetConfigureActivity.SHARED_PREFS;
@@ -26,20 +37,10 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
 
         SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
         int recipeId = prefs.getInt(KEY_RECIPE_ID + appWidgetId, 0);
-       // getRecipeById(recipeId);
         String ingredientsText = prefs.getString(KEY_INGREDIENTS_TEXT + appWidgetId,
                 "Something went wrong. Ingredients list is empty");
-        Intent intent = new Intent(context, RecipeDetailsActivity.class);
-        intent.putExtra("recipe", mRecipe);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
 
-
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
-        views.setOnClickPendingIntent(R.id.tv_ingredients_widget, pendingIntent);
-        views.setCharSequence(R.id.tv_ingredients_widget, "setText", ingredientsText);
-
-        appWidgetManager.updateAppWidget(appWidgetId, views);
 
     }
 
@@ -61,8 +62,50 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    //public static int getRecipeById(int recipeId){
-      //  return mRecipe;
-   // }
+    private class FetchRecipeTask extends AsyncTask<Void, Void, Void> {
+
+        private Context context;
+        private AppWidgetManager appWidgetManager;
+        private int appWidgetId;
+        private int recipeId;
+        private String ingredientsText;
+        Recipe recipe = null;
+
+        public FetchRecipeTask(Context context, AppWidgetManager appWidgetManager, int appWidgetId,
+                               int recipeId, String ingredientsText){
+            this.context = context;
+            this.appWidgetManager = appWidgetManager;
+            this.appWidgetId = appWidgetId;
+            this.recipeId = recipeId;
+            this.ingredientsText = ingredientsText;
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            AppDatabase mDb = AppDatabase.getInstance(context);
+            recipe = mDb.recipeDao().loadRecipeById1(recipeId);
+            Log.d(TAG, "doInBackground: ");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void param) {
+            Intent intent = new Intent(context, RecipeDetailsActivity.class);
+            intent.putExtra("recipe", recipe);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+
+
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_ingredients_widget);
+            views.setOnClickPendingIntent(R.id.tv_ingredients_widget, pendingIntent);
+            views.setCharSequence(R.id.tv_ingredients_widget, "setText", ingredientsText);
+
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+
+        }
+
+    }
 }
 

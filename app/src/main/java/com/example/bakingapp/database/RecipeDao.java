@@ -20,6 +20,10 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE id = :id")
     LiveData<Recipe> loadRecipeById(int id);
 
+    @Query("SELECT * FROM recipe WHERE id = :id")
+    Recipe loadRecipeById1(int id);
+
+
     @Insert
     void insertRecipe(Recipe recipe);
 
