@@ -3,7 +3,9 @@ package com.example.bakingapp.database;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.example.bakingapp.model.Recipe;
 
@@ -20,5 +22,8 @@ public interface RecipeDao {
 
     @Insert
     void insertRecipe(Recipe recipe);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateRecipe(Recipe recipe);
 
 }

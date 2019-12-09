@@ -44,7 +44,7 @@ import static android.content.ContentValues.TAG;
 
 public class StepDetailsFragment extends Fragment {
 
-    private ArrayList<Step> mSteps;
+    private List<Step> mSteps;
     private int mId;
 
     public static final String STEPS_LIST = "steps_list";
@@ -196,7 +196,7 @@ public class StepDetailsFragment extends Fragment {
         }
     }
 
-    public void setSteps(ArrayList<Step> steps) {
+    public void setSteps(List<Step> steps) {
         mSteps = steps;
     }
 

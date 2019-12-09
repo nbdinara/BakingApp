@@ -1,6 +1,9 @@
 package com.example.bakingapp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +19,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.bakingapp.database.AppDatabase;
+import com.example.bakingapp.model.Ingredient;
 import com.example.bakingapp.model.Recipe;
+import com.example.bakingapp.model.Step;
 import com.example.bakingapp.utilities.JsonUtils;
 import com.example.bakingapp.utilities.NetworkUtils;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -35,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private RecipeAdapter mRecipeAdapter;
     List<Recipe> mRecipes;
     private int NUMBER_OF_COLUMNS = 3;
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +70,26 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mRecipeAdapter = new RecipeAdapter(this);
         mRecyclerView.setAdapter(mRecipeAdapter);
 
+        mDb = AppDatabase.getInstance(getApplicationContext());
+
         loadRecipesData();
 
 
+    }
+
+    private void setupViewModel() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                if (recipes != null) {
+                    mRecipeAdapter.setRecipesData(recipes);
+                } else {
+                    showErrorMessage();
+                }
+            }
+        });
     }
 
     public void loadRecipesData(){
@@ -72,8 +97,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         if(isOnline()) {
             new FetchRecipesTask().execute();
         } else {
-            Log.d(TAG, "showerrormessage: ");
-            showErrorMessage();
+            setupViewModel();
         }
     }
 
@@ -111,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         Intent intentToStartRecipeDetailActivity = new Intent(context, destinationClass);
         //Log.d(TAG, "myrecipe name: " + recipe.getName());
         //Log.d(TAG, "myrecipe step 3: " + recipe.getSteps().get(2).getDescription());
-        intentToStartRecipeDetailActivity.putExtra("recipe", recipe);
+        intentToStartRecipeDetailActivity.putExtra("recipe_id", recipe.getId());
         startActivity(intentToStartRecipeDetailActivity);
     }
 
@@ -121,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+            showLoadingIndicator();
         }
 
         @Override
@@ -152,10 +176,83 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
             if (mRecipes != null) {
                 mRecipeAdapter.setRecipesData(mRecipes);
                 showRecipesData();
+                for (Recipe recipe: mRecipes){
+                    checkIfRecipeInDb(recipe);
+                }
             } else {
                 showErrorMessage();
             }
         }
+    }
+
+    public void addRecipeToDatabase(Recipe recipe) {
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.recipeDao().insertRecipe(recipe);
+            }
+        });
+
+        List<Ingredient> ingredients = recipe.getIngredients();
+        for (Ingredient ingredient: ingredients){
+            addIngredientToDatabase(ingredient);
+        }
+        List<Step> steps = recipe.getSteps();
+        for (Step step: steps){
+            addStepToDatabase(step);
+        }
+    }
+
+    public void checkIfRecipeInDb(Recipe recipe){
+        int id = recipe.getId();
+        String name = recipe.getName();
+        int serving = recipe.getServing();
+        String image = recipe.getImage();
+
+        final Recipe mRecipe = new Recipe(id, name, serving, image);
+
+        MainIdViewModelFactory factory = new MainIdViewModelFactory(mDb, id);
+        // COMPLETED (11) Declare a AddTaskViewModel variable and initialize it by calling ViewModelProviders.of
+        // for that use the factory created above AddTaskViewModel
+        final MainIdViewModel viewModel
+                = ViewModelProviders.of(this, factory).get(MainIdViewModel.class);
+
+        // COMPLETED (12) Observe the LiveData object in the ViewModel. Use it also when removing the observer
+        viewModel.getRecipe().observe(this, new Observer<Recipe>() {
+            @Override
+            public void onChanged(@Nullable Recipe mRecipe) {
+                viewModel.getRecipe().removeObserver(this);
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mRecipe != null){
+                            mDb.recipeDao().updateRecipe(recipe);
+                        } else {
+                            addRecipeToDatabase(recipe);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public void addIngredientToDatabase(Ingredient ingredient) {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.ingredientDao().insertIngredient(ingredient);
+            }
+        });
+    }
+
+    public void addStepToDatabase(Step step) {
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.stepDao().insertStep(step);
+            }
+        });
     }
 
     public boolean isOnline() {

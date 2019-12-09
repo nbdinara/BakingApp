@@ -1,7 +1,6 @@
 package com.example.bakingapp;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.bakingapp.model.Ingredient;
 import com.example.bakingapp.model.Recipe;
@@ -25,7 +23,7 @@ public class MasterListFragment extends Fragment {
 
     private Recipe mRecipe;
     private List<Step> mSteps;
-    private ArrayList<Ingredient> mIngredients;
+    private List<Ingredient> mIngredients;
 
     public static final String INGREDIENTS_LIST = "ingredients_list";
     public static final String STEPS_LIST = "steps_list";
@@ -68,11 +66,6 @@ public class MasterListFragment extends Fragment {
             mSteps = savedInstanceState.getParcelableArrayList(STEPS_LIST);
             mRecipe = savedInstanceState.getParcelable(RECIPE);
             mIngredients = savedInstanceState.getParcelableArrayList(INGREDIENTS_LIST);
-        } else {
-            mSteps = new ArrayList<>();
-            mSteps = mRecipe.getSteps();
-            mIngredients = new ArrayList<>();
-            mIngredients = mRecipe.getIngredients();
         }
         MasterListAdapter mAdapter = new MasterListAdapter(getContext(), mSteps);
         View rootView =  inflater.inflate(R.layout.fragment_master_list, container, false);
@@ -100,6 +93,14 @@ public class MasterListFragment extends Fragment {
 
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        mIngredients = ingredients;
+    }
+
+    public void setSteps(List<Step> steps) {
+        mSteps = steps;
     }
 
 
