@@ -38,12 +38,14 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
     private AppDatabase mDb;
     private List<Step> mSteps;
     private List<Ingredient> mIngredients;
+    private Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
+        this.savedInstanceState = savedInstanceState;
         mDb = AppDatabase.getInstance(getApplicationContext());
 
         Intent intentThatStartedThisActivity = getIntent();
@@ -51,43 +53,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
             mRecipeId = intentThatStartedThisActivity.getIntExtra("recipe_id", 0);
             Log.d(TAG, "I am here 1: " + mRecipeId);
             loadRecipeById(mRecipeId);
-            Log.d(TAG, "I am here 2: ");
-            loadIngredientsByRecipeId(mRecipeId);
-            Log.d(TAG, "I am here 3: ");
-            loadStepsByRecipeId(mRecipeId);
-            //Log.d(TAG, "mRecipe Id: " + mRecipe.getId());
-            Log.d(TAG, "mIngredientsSize: " + mIngredients.size() + ", first element recipe id"
-                   );
-            Log.d(TAG, "mStepsSize: " + mSteps.size() + ", first element recipe id"
-                   );
 
         }
-
-        if (findViewById(R.id.divider)!=null){
-            mTwoPane = true;
-            if (savedInstanceState == null) {
-                StepDetailsFragment stepFragment = new StepDetailsFragment();
-                stepFragment.setSteps(mSteps);
-                stepFragment.setId(0);
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().add(R.id.step_container, stepFragment).commit();
-            }
-        } else {
-            mTwoPane = false;
-        }
-
-        MasterListFragment masterListFragment = new MasterListFragment();
-        masterListFragment.setRecipe(mRecipe);
-        masterListFragment.setSteps(mSteps);
-        masterListFragment.setIngredients(mIngredients);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        fragmentManager.beginTransaction()
-                .add(R.id.recipe_container, masterListFragment)
-                .commit();
-
-
-
     }
 
     public void loadRecipeById(int recipeId){
@@ -109,7 +76,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
                 if (mRecipe!=null){
                     Log.d(TAG, "mRecipe is not null: " + mRecipe.getName());
                 }
-
+                loadIngredientsByRecipeId(mRecipeId);
             }
         });
     }
@@ -128,6 +95,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
             public void onChanged(@Nullable List<Ingredient> ingredients) {
                 viewModel.getIngredients().removeObserver(this);
                 mIngredients = ingredients;
+                loadStepsByRecipeId(mRecipeId);
             }
         });
     }
@@ -146,7 +114,31 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
             public void onChanged(@Nullable List<Step> steps) {
                 viewModel.getSteps().removeObserver(this);
                 mSteps = steps;
+
+                if (findViewById(R.id.divider)!=null){
+                    mTwoPane = true;
+                    if (savedInstanceState == null) {
+                        StepDetailsFragment stepFragment = new StepDetailsFragment();
+                        stepFragment.setSteps(mSteps);
+                        stepFragment.setId(0);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().add(R.id.step_container, stepFragment).commit();
+                    }
+                } else {
+                    mTwoPane = false;
+                }
+
+                MasterListFragment masterListFragment = new MasterListFragment();
+                masterListFragment.setRecipe(mRecipe);
+                masterListFragment.setSteps(mSteps);
+                masterListFragment.setIngredients(mIngredients);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+
+                fragmentManager.beginTransaction()
+                        .add(R.id.recipe_container, masterListFragment)
+                        .commit();
             }
+
         });
     }
 
