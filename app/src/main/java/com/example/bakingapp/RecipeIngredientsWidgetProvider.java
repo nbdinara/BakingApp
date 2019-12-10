@@ -93,7 +93,7 @@ public class RecipeIngredientsWidgetProvider extends AppWidgetProvider {
         @Override
         protected void onPostExecute(Void param) {
             Intent intent = new Intent(context, RecipeDetailsActivity.class);
-            intent.putExtra("recipe", recipe);
+            intent.putExtra("recipe_id", recipe.getId());
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
 

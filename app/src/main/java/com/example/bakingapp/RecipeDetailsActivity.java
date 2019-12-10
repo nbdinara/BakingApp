@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+import static com.example.bakingapp.ConfigurableWidgetConfigureActivity.KEY_RECIPE_ID;
+import static com.example.bakingapp.ConfigurableWidgetConfigureActivity.SHARED_PREFS;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements MasterListFragment.OnImageClickListener{
 
@@ -40,6 +43,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
     private List<Ingredient> mIngredients;
     private Bundle savedInstanceState;
 
+    int appWidgetId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +54,14 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null) {
-            mRecipeId = intentThatStartedThisActivity.getIntExtra("recipe_id", 0);
+            mRecipeId = intentThatStartedThisActivity.getIntExtra("recipe_id", -1);
             Log.d(TAG, "I am here 1: " + mRecipeId);
-            loadRecipeById(mRecipeId);
+
 
         }
+
+        loadRecipeById(mRecipeId);
+
     }
 
     public void loadRecipeById(int recipeId){

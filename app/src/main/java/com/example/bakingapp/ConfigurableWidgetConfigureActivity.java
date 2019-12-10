@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -92,17 +93,14 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
     public void confirmConfiguration(View v) {
         appWidgetManager = AppWidgetManager.getInstance(this);
 
-        Intent intent = new Intent(this, RecipeDetailsActivity.class);
-        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
         packageName = this.getPackageName();
         String recipesSelectedItem = String.valueOf(recipesSpinner.getSelectedItem());
-        List<Ingredient> ingredients = getIngredientsFromRecipe(recipesSelectedItem);
+        getIngredientsFromRecipe(recipesSelectedItem);
 
     }
 
 
-    public List<Ingredient> getIngredientsFromRecipe (String recipeName){
+    public void getIngredientsFromRecipe (String recipeName){
         List<Ingredient> ingredients = new ArrayList<>();
         for (int i = 0; i < mRecipes.size(); i++){
             if (mRecipes.get(i).getName().equals(recipeName)){
@@ -111,7 +109,6 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
                 break;
             }
         }
-        return  ingredients;
     }
 
     public String makeStringFromIngredientsList (List<Ingredient> ingredients){
@@ -154,6 +151,19 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
                 viewModel.getIngredients().removeObserver(this);
                 String ingredientsString = makeStringFromIngredientsList(ingredients);
 
+                SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(KEY_INGREDIENTS_TEXT + appWidgetId, ingredientsString);
+                editor.putInt(KEY_RECIPE_ID + appWidgetId, mRecipeId);
+                editor.putInt("recipe_id", mRecipeId);
+                editor.apply();
+
+                Intent intent = new Intent(getApplicationContext(), RecipeDetailsActivity.class);
+                Log.d(TAG, "mRecipeId: " + mRecipeId);
+                intent.putExtra("recipe_id", mRecipeId);
+                intent.putExtra("app_widget_id", appWidgetId);
+                intent.setData(Uri.withAppendedPath(Uri.parse("myapp://widget/id/#togetituniqie" + appWidgetId), String.valueOf(appWidgetId)));
+                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
 
                 RemoteViews views = new RemoteViews(packageName, R.layout.recipe_ingredients_widget);
                 views.setOnClickPendingIntent(R.id.tv_ingredients_widget, pendingIntent);
@@ -161,11 +171,6 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
 
                 appWidgetManager.updateAppWidget(appWidgetId, views);
 
-                SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(KEY_INGREDIENTS_TEXT + appWidgetId, ingredientsString);
-                editor.putInt(KEY_RECIPE_ID + appWidgetId, mRecipeId);
-                editor.apply();
 
                 Intent resultValue = new Intent();
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

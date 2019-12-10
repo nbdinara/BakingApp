@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.bakingapp.model.Ingredient;
 import com.example.bakingapp.model.Recipe;
@@ -71,8 +72,10 @@ public class MasterListFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_master_list, container, false);
         //  TextView ingredientsListView =  rootView.findViewById(R.id.tv_ingredients);
         ListView stepsListView =  rootView.findViewById(R.id.lv_steps);
-
         stepsListView.setAdapter(mAdapter);
+
+        TextView recipeNameHeader = rootView.findViewById(R.id.tv_recipe_name_header);
+        recipeNameHeader.setText(mRecipe.getName());
 
         MasterIngredientsListAdapter mIngredientsAdapter =
                 new MasterIngredientsListAdapter(getContext(), R.layout.ingredient_list_item, mIngredients);
