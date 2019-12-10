@@ -47,6 +47,8 @@ public class MasterListAdapter extends BaseAdapter {
 
         // Set the image resource and return the newly created ImageView
         textView.setText(mSteps.get(position).getShortDescription());
+        textView.setPadding(0, 14, 0, 14);
+        textView.setTextSize(18);
         return textView;
     }
 }

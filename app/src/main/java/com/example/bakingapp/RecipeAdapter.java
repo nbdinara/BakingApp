@@ -1,6 +1,7 @@
 package com.example.bakingapp;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         String name = mRecipesData.get(position).getName();
         recipeAdapterViewHolder.mRecipeNameView.setText(name);
         int serving = mRecipesData.get(position).getServing();
-        recipeAdapterViewHolder.mRecipeServingView.setText(Integer.toString(serving));
+        recipeAdapterViewHolder.mRecipeServingView.setText("Serving: " + Integer.toString(serving));
 
     }
 

@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,7 +69,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         }
 
         mRecipeAdapter = new RecipeAdapter(this);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
         mRecyclerView.setAdapter(mRecipeAdapter);
+
 
         mDb = AppDatabase.getInstance(getApplicationContext());
 

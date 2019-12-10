@@ -81,6 +81,7 @@ public class StepDetailsFragment extends Fragment {
         final TextView textView = rootView.findViewById(R.id.tv_step_full_description);
         Button previousButton = rootView.findViewById(R.id.btn_previous);
         Button nextButton = rootView.findViewById(R.id.btn_next);
+        TextView stepDescription = rootView.findViewById(R.id.tv_step_description);
 
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.media_player);
         setVideo(mSteps.get(mId).getVideoURL(), mSteps.get(mId).getThumbnailURL());
@@ -112,6 +113,7 @@ public class StepDetailsFragment extends Fragment {
 
         //imageView.setImageResource();
         if (mSteps != null) {
+            stepDescription.setText(mSteps.get(mId).getShortDescription());
             textView.setText(mSteps.get(mId).getDescription());
             previousButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -121,6 +123,7 @@ public class StepDetailsFragment extends Fragment {
                         releasePlayer();
                         setVideo(mSteps.get(mId).getVideoURL(), mSteps.get(mId).getThumbnailURL());
                         textView.setText(mSteps.get(mId).getDescription());
+                        stepDescription.setText(mSteps.get(mId).getShortDescription());
                     } else {
                         Toast.makeText(getContext(), "This is the first step", Toast.LENGTH_LONG).show();
                     }
@@ -136,6 +139,7 @@ public class StepDetailsFragment extends Fragment {
                         releasePlayer();
                         textView.setText(mSteps.get(mId).getDescription());
                         setVideo(mSteps.get(mId).getVideoURL(), mSteps.get(mId).getThumbnailURL());
+                        stepDescription.setText(mSteps.get(mId).getShortDescription());
                     } else {
                         Toast.makeText(getContext(), "This is the last step", Toast.LENGTH_LONG).show();
                     }

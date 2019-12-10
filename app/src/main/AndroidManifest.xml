@@ -28,7 +28,8 @@
         </receiver>
 
         <activity android:name=".StepDetailsActivity" />
-        <activity android:name=".RecipeDetailsActivity" />
+        <activity android:name=".RecipeDetailsActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

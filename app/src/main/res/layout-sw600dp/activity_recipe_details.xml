@@ -15,7 +15,7 @@
         android:id="@+id/divider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@android:color/darker_gray"/>
+        android:background="@color/colorDivider"/>
 
     <FrameLayout
         android:layout_weight="2"
