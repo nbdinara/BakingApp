@@ -57,6 +57,7 @@ public class StepDetailsFragment extends Fragment {
     private long mCurrentPosition;
     private boolean isPlayerReady;
 
+
     public StepDetailsFragment() {
         // Required empty public constructor
     }

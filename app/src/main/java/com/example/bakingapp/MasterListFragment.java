@@ -32,6 +32,7 @@ public class MasterListFragment extends Fragment {
     public static final String STEPS_LIST = "steps_list";
     public static final String RECIPE = "recipe";
     MasterListAdapter mAdapter;
+    MasterIngredientsListAdapter mIngredientsAdapter;
 
     // Define a new interface OnImageClickListener that triggers a callback in the host activity
     OnImageClickListener mCallback;
@@ -45,7 +46,6 @@ public class MasterListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
 
 
         // This makes sure that the host activity has implemented the callback interface
@@ -72,15 +72,17 @@ public class MasterListFragment extends Fragment {
             mRecipe = savedInstanceState.getParcelable(RECIPE);
             mIngredients = savedInstanceState.getParcelableArrayList(INGREDIENTS_LIST);
         } else {
-            if(rootView == null){
+            if (rootView == null) {
                 rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
             }
 
             //  TextView ingredientsListView =  rootView.findViewById(R.id.tv_ingredients);
             ListView stepsListView = rootView.findViewById(R.id.lv_steps);
-            if(mAdapter == null){
+            if (mAdapter == null) {
                 mAdapter = new MasterListAdapter(getContext(), mSteps);
                 stepsListView.setAdapter(mAdapter);
+                updateStepsListViewHeight(mAdapter, stepsListView);
+
                 stepsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -89,21 +91,22 @@ public class MasterListFragment extends Fragment {
                     }
                 });
             }
-            //updateStepsListViewHeight(mAdapter, stepsListView);
 
             TextView recipeNameHeader = rootView.findViewById(R.id.tv_recipe_name_header);
             recipeNameHeader.setText(mRecipe.getName());
 
-            MasterIngredientsListAdapter mIngredientsAdapter =
-                    new MasterIngredientsListAdapter(getContext(), R.layout.ingredient_list_item, mIngredients);
-            ListView ingredientsListView = rootView.findViewById(R.id.lv_ingredients);
+            if (mIngredientsAdapter == null) {
 
-            ingredientsListView.setAdapter(mIngredientsAdapter);
-            // updateIngredientsListViewHeight(mIngredientsAdapter, ingredientsListView);
+                mIngredientsAdapter = new MasterIngredientsListAdapter(getContext(), R.layout.ingredient_list_item, mIngredients);
+                ListView ingredientsListView = rootView.findViewById(R.id.lv_ingredients);
+
+                ingredientsListView.setAdapter(mIngredientsAdapter);
+                updateIngredientsListViewHeight(mIngredientsAdapter, ingredientsListView);
+
+            }
 
 
         }
-
 
 
         return rootView;
@@ -128,4 +131,56 @@ public class MasterListFragment extends Fragment {
         currentState.putParcelable(RECIPE, mRecipe);
         currentState.putParcelableArrayList(INGREDIENTS_LIST, (ArrayList<Ingredient>) mIngredients);
     }
+
+    public static void updateIngredientsListViewHeight(MasterIngredientsListAdapter mIngredientsAdapter,
+                                                       ListView mIngredientsListView) {
+        if (mIngredientsAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        int adapterCount = mIngredientsAdapter.getCount();
+        int listWidth = mIngredientsListView.getMeasuredWidth();
+
+
+        for (int size = 0; size < adapterCount; size++) {
+            View mView = mIngredientsAdapter.getView(size, null, mIngredientsListView);
+
+            mView.measure(
+                    View.MeasureSpec.makeMeasureSpec(listWidth, View.MeasureSpec.EXACTLY),
+
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+            totalHeight += mView.getMeasuredHeight();
+        }
+        // Change Height of ListView
+        ViewGroup.LayoutParams params = mIngredientsListView.getLayoutParams();
+        params.height = (totalHeight
+                + (mIngredientsListView.getDividerHeight() * (adapterCount-1)));
+        mIngredientsListView.setLayoutParams(params);
+        //mIngredientsListView.requestLayout();
+
+    }
+
+    public static void updateStepsListViewHeight(MasterListAdapter mStepsAdapter,
+                                                 ListView mStepsListView) {
+        if (mStepsAdapter == null) {
+            return;
+        }
+        // get listview height
+        int totalHeight = 0;
+        int adapterCount = mStepsAdapter.getCount();
+        for (int size = 0; size < adapterCount; size++) {
+            View listItem = mStepsAdapter.getView(size, null, mStepsListView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        // Change Height of ListView
+        ViewGroup.LayoutParams params = mStepsListView.getLayoutParams();
+        params.height = (totalHeight
+                + (mStepsListView.getDividerHeight() * (adapterCount)));
+        mStepsListView.setLayoutParams(params);
+    }
+
+
 }
