@@ -7,4 +7,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
 
+    <dimen name="ingredients_height">300dp</dimen>
+    <dimen name="steps_height">500dp</dimen>
+
 </resources>

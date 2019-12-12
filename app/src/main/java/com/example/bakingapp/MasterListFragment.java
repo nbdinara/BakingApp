@@ -92,7 +92,7 @@ public class MasterListFragment extends Fragment {
             if (mAdapter == null) {
                 mAdapter = new MasterListAdapter(getContext(), mSteps);
                 stepsListView.setAdapter(mAdapter);
-                updateIngredientsListViewHeight(stepsListView);
+                //updateIngredientsListViewHeight(stepsListView);
 
                 stepsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -112,7 +112,7 @@ public class MasterListFragment extends Fragment {
 
 
                 ingredientsListView.setAdapter(mIngredientsAdapter);
-                updateIngredientsListViewHeight(ingredientsListView);
+                //updateIngredientsListViewHeight(ingredientsListView);
 
             }
 
@@ -190,6 +190,7 @@ public class MasterListFragment extends Fragment {
                 + (mStepsListView.getDividerHeight() * (adapterCount)));
         mStepsListView.setLayoutParams(params);
     }
+
 
 
 }

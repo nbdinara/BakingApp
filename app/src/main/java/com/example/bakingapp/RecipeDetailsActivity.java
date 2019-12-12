@@ -133,6 +133,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().add(R.id.step_container, stepFragment).commit();
                     }
+
                 } else {
                     mTwoPane = false;
                 }

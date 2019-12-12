@@ -30,6 +30,7 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -102,9 +103,10 @@ public class StepDetailsFragment extends Fragment {
         if (orientation == Configuration.ORIENTATION_LANDSCAPE && !tabletSize) {
             // In landscape
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mPlayerView.getLayoutParams();
-            params.width=params.MATCH_PARENT;
-            params.height=params.MATCH_PARENT;
+            params.width= ViewGroup.LayoutParams.MATCH_PARENT;
+            params.height= ViewGroup.LayoutParams.MATCH_PARENT;
             mPlayerView.setLayoutParams(params);
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
            // mPlayerView.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
           //  mPlayerView.getLayoutParams().height = LinearLayout.LayoutParams.MATCH_PARENT;

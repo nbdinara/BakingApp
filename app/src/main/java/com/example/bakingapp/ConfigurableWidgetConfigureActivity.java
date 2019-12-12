@@ -29,15 +29,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static android.content.ContentValues.TAG;
 
 public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
 
-    @BindView(R.id.spinner_recipes) Spinner recipesSpinner;
-
+    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private Spinner recipesSpinner;
+    private Button chooseRecipeButton;
+    private AppWidgetManager widgetManager;
+    private RemoteViews views;
 
     public static final String SHARED_PREFS = "prefs";
     public static final String KEY_INGREDIENTS_TEXT = "keyIngredientsText";
@@ -54,8 +54,6 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
-
         // activity stuffs
         setContentView(R.layout.activity_widget_configure);
 
@@ -76,6 +74,7 @@ public class ConfigurableWidgetConfigureActivity extends AppCompatActivity {
             finish();
         }
 
+        recipesSpinner = findViewById(R.id.spinner_recipes);
         loadRecipes();
     }
 
