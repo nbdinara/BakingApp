@@ -24,6 +24,9 @@ import com.example.bakingapp.model.Step;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MasterListFragment extends Fragment {
 
@@ -37,6 +40,10 @@ public class MasterListFragment extends Fragment {
     public static final String RECIPE = "recipe";
     MasterListAdapter mAdapter;
     MasterIngredientsListAdapter mIngredientsAdapter;
+    @BindView(R.id.lv_steps) ListView stepsListView;
+    @BindView(R.id.tv_recipe_name_header)TextView recipeNameHeader;
+    @BindView(R.id.lv_ingredients) ListView ingredientsListView;
+
 
     // Define a new interface OnImageClickListener that triggers a callback in the host activity
     OnImageClickListener mCallback;
@@ -79,9 +86,9 @@ public class MasterListFragment extends Fragment {
             if (rootView == null) {
                 rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
             }
+            ButterKnife.bind(this, rootView);
 
             //  TextView ingredientsListView =  rootView.findViewById(R.id.tv_ingredients);
-            ListView stepsListView = rootView.findViewById(R.id.lv_steps);
             if (mAdapter == null) {
                 mAdapter = new MasterListAdapter(getContext(), mSteps);
                 stepsListView.setAdapter(mAdapter);
@@ -96,13 +103,13 @@ public class MasterListFragment extends Fragment {
                 });
             }
 
-            TextView recipeNameHeader = rootView.findViewById(R.id.tv_recipe_name_header);
+
             recipeNameHeader.setText(mRecipe.getName());
 
             if (mIngredientsAdapter == null) {
 
                 mIngredientsAdapter = new MasterIngredientsListAdapter(getContext(), R.layout.ingredient_list_item, mIngredients);
-                ListView ingredientsListView = rootView.findViewById(R.id.lv_ingredients);
+
 
                 ingredientsListView.setAdapter(mIngredientsAdapter);
                 updateIngredientsListViewHeight(ingredientsListView);

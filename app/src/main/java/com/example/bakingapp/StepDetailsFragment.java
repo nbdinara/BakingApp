@@ -39,6 +39,9 @@ import java.util.List;
 
 import javax.xml.datatype.Duration;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.content.ContentValues.TAG;
 
 
@@ -53,9 +56,14 @@ public class StepDetailsFragment extends Fragment {
     public static final String PLAYER_IS_READY = "player_is_ready";
 
     private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.media_player) SimpleExoPlayerView mPlayerView;
     private long mCurrentPosition;
     private boolean isPlayerReady;
+    @BindView(R.id.btn_previous)Button previousButton;
+    @BindView(R.id.btn_next) Button nextButton;
+    @BindView(R.id.tv_step_full_description) TextView textView;
+    @BindView(R.id.tv_step_description) TextView stepDescription;
+
 
 
     public StepDetailsFragment() {
@@ -79,14 +87,10 @@ public class StepDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_step_details, container, false);
         //ImageView imageView = rootView.findViewById(R.id.media_player);
-        final TextView textView = rootView.findViewById(R.id.tv_step_full_description);
-        Button previousButton = rootView.findViewById(R.id.btn_previous);
-        Button nextButton = rootView.findViewById(R.id.btn_next);
-        TextView stepDescription = rootView.findViewById(R.id.tv_step_description);
 
-        mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.media_player);
+        ButterKnife.bind(this, rootView);
         setVideo(mSteps.get(mId).getVideoURL(), mSteps.get(mId).getThumbnailURL());
-        if (mCurrentPosition != -1){
+        if (mCurrentPosition != -1 && mExoPlayer!=null){
             mExoPlayer.seekTo(mCurrentPosition);
             mExoPlayer.setPlayWhenReady(isPlayerReady);
         }

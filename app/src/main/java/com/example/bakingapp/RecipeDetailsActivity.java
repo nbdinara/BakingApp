@@ -31,25 +31,28 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.content.ContentValues.TAG;
-import static com.example.bakingapp.ConfigurableWidgetConfigureActivity.KEY_RECIPE_ID;
-import static com.example.bakingapp.ConfigurableWidgetConfigureActivity.SHARED_PREFS;
 
 public class RecipeDetailsActivity extends AppCompatActivity implements MasterListFragment.OnImageClickListener{
 
     private Recipe mRecipe;
-    private boolean mTwoPane;
+    @Nullable
+    @BindView(R.id.divider) View mDivider;
+    boolean mTwoPane;
     private int mRecipeId;
     private AppDatabase mDb;
     private List<Step> mSteps;
     private List<Ingredient> mIngredients;
     private Bundle savedInstanceState;
 
-    int appWidgetId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
+        ButterKnife.bind(this);
 
         this.savedInstanceState = savedInstanceState;
         mDb = AppDatabase.getInstance(getApplicationContext());
@@ -57,9 +60,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null) {
             mRecipeId = intentThatStartedThisActivity.getIntExtra("recipe_id", -1);
-            Log.d(TAG, "I am here 1: " + mRecipeId);
-
-
         }
 
         loadRecipeById(mRecipeId);
@@ -124,7 +124,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements MasterLi
                 viewModel.getSteps().removeObserver(this);
                 mSteps = steps;
 
-                if (findViewById(R.id.divider)!=null){
+                if (mDivider!=null){
                     mTwoPane = true;
                     if (savedInstanceState == null) {
                         StepDetailsFragment stepFragment = new StepDetailsFragment();

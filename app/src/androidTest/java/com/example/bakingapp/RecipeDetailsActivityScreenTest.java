@@ -1,16 +1,24 @@
 package com.example.bakingapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.test.InstrumentationRegistry;
 import androidx.test.espresso.contrib.RecyclerViewActions;
 
+import androidx.test.espresso.core.internal.deps.guava.collect.Iterables;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
 
 import com.example.bakingapp.model.Step;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +26,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.test.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -41,8 +50,19 @@ public class RecipeDetailsActivityScreenTest {
     private final String STEP_FULL_DESCRIPTION = "2. Melt the butter and bittersweet chocolate together in a microwave or a double boiler. If microwaving, heat for 30 seconds at a time, removing bowl and stirring ingredients in between.";
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-   // public IntentsTestRule<RecipeDetailsActivity> mActivityRule = new IntentsTestRule<>(
+    public ActivityTestRule<RecipeDetailsActivity> mActivityTestRule =
+            new ActivityTestRule<>(RecipeDetailsActivity.class, false, false);
+
+    private Activity launchedActivity;
+
+    @Before
+    public void setup() {
+        Intent intent = new Intent();
+        intent.putExtra("recipe_id", 1);
+        launchedActivity = mActivityTestRule.launchActivity(intent);
+    }
+
+    // public IntentsTestRule<RecipeDetailsActivity> mActivityRule = new IntentsTestRule<>(
      //       RecipeDetailsActivity.class);
     /**
      * Clicks on a GridView item and checks it opens up the OrderActivity with the correct details.
@@ -64,25 +84,15 @@ public class RecipeDetailsActivityScreenTest {
                          */
 
 
-
-        // Uses {@link Espresso#onData(org.hamcrest.Matcher)} to get a reference to a specific
-        // gridview item and clicks it.
-        //onData(anything()).inAdapterView(withId(R.id.rv_recipes)).atPosition(0).perform(click());
-
-
-        onView(withId(R.id.rv_recipes)).perform(
-                        RecyclerViewActions.actionOnItemAtPosition(1, click()));
-
-        onData(anything()).inAdapterView(withId(R.id.lv_steps)).atPosition(2).perform(click());
+        onView(withId(R.id.recipe_container)).check(matches(isDisplayed()));
+        onView(withId(R.id.lv_steps)).check(matches(isDisplayed()));
+        onData(anything()).inAdapterView(withId(R.id.lv_steps)).atPosition(0).perform(click());
 
         //intended(allOf(hasComponent(StepDetailsFragment.class.getName()), (hasExtra("steps", steps)), hasExtra("id", id)));
-
-
-
         // Checks that the OrderActivity opens with the correct tea name displayed
-        
+
+
          onView(withId(R.id.tv_step_full_description)).check(matches(isDisplayed()));
-             onView(withId(R.id.tv_step_full_description)).check(matches(withText(STEP_FULL_DESCRIPTION)));
 
     }
 }

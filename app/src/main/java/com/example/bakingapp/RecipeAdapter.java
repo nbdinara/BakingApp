@@ -12,8 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bakingapp.model.Recipe;
+import com.google.android.exoplayer2.C;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder> {
 
@@ -32,15 +36,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
     public class RecipeAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final TextView mRecipeNameView;
-        private final TextView mRecipeServingView;
-        private final ProgressBar mProgressBar;
+        @BindView(R.id.tv_recipe_name) TextView mRecipeNameView;
+        @BindView(R.id.tv_recipe_serving) TextView mRecipeServingView;
+        @BindView(R.id.pb_loading_each_recipe_name_indicator) ProgressBar mProgressBar;
+
 
         private RecipeAdapterViewHolder(View view) {
             super(view);
-            mRecipeNameView = view.findViewById(R.id.tv_recipe_name);
-            mRecipeServingView = view.findViewById(R.id.tv_recipe_serving);
-            mProgressBar = view.findViewById(R.id.pb_loading_each_recipe_name_indicator);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 

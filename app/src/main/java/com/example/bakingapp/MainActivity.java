@@ -31,34 +31,37 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindBool;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.content.ContentValues.TAG;
 
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler{
 
 
-    private RecyclerView mRecyclerView;
-    private ProgressBar mLoadingIndicator;
-    private TextView mErrorMessageDisplay;
-    private RecipeAdapter mRecipeAdapter;
+    @BindView(R.id.rv_recipes) RecyclerView mRecyclerView;
+    @BindView(R.id.pb_loading_all_recipes_indicator) ProgressBar mLoadingIndicator;
+    @BindView(R.id.tv_error_message_display) TextView mErrorMessageDisplay;
+    RecipeAdapter mRecipeAdapter;
     List<Recipe> mRecipes;
-    private int NUMBER_OF_COLUMNS = 3;
-    private AppDatabase mDb;
+    int NUMBER_OF_COLUMNS = 3;
+    AppDatabase mDb;
+    @BindBool(R.bool.isTablet) boolean tabletSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        mRecyclerView = findViewById(R.id.rv_recipes);
-        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = findViewById(R.id.pb_loading_all_recipes_indicator);
-
-        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        //boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
         if (tabletSize) {
             GridLayoutManager layoutManager
                     = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
             mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), 0));
 
         } else {
 
