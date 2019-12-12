@@ -29,8 +29,8 @@ public class StepDetailsActivity extends AppCompatActivity {
         mSteps = new ArrayList<>();
         if (intentThatStartedThisActivity != null) {
             mSteps = intentThatStartedThisActivity.getParcelableArrayListExtra("steps");
-            id = intentThatStartedThisActivity.getIntExtra("id", 0);
-            Log.d(TAG, "Mysteps2: " + mSteps.size() + "   id " + id);
+            id = intentThatStartedThisActivity.getIntExtra("recipe_id", 0);
+            Log.d(TAG, "Mysteps2: " + mSteps.size() + "   recipe_id " + id);
         }
 
 
