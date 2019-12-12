@@ -13,6 +13,8 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
@@ -28,18 +30,15 @@ public class MainActivityScreenTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+    
     /**
      * Clicks on a GridView item and checks it opens up the RecipeDetailsActivity with the correct
      * recipe name, ingredients list and steps list.
      */
     @Test
     public void clickGridViewItem_OpensOrderActivity() {
-
-
-
         onView(withId(R.id.rv_recipes)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(1, click()));
-
 
         onView(withId(R.id.tv_recipe_name_header)).check(matches(withText(RECIPE_NAME)));
 
