@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Parcelable;
 
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -33,6 +35,8 @@ public class StepsFragmentTest {
 
 
     private final String STEP_FULL_DESCRIPTION = "2. Melt the butter and bittersweet chocolate together in a microwave or a double boiler. If microwaving, heat for 30 seconds at a time, removing bowl and stirring ingredients in between.";
+    private final String NEXT_STEP_FULL_DESCRIPTION = "3. Mix both sugars into the melted chocolate in a large mixing bowl until mixture is smooth and uniform.";
+    private final String PREVIOUS_STEP_FULL_DESCRIPTION = "1. Preheat the oven to 350?F. Butter the bottom and sides of a 9\\\"x13\\\" pan.";
 
     @Rule
     public ActivityTestRule<StepDetailsActivity> mActivityTestRule =
@@ -73,7 +77,6 @@ public class StepsFragmentTest {
 
         // onView(withId(R.id.recipe_container)).check(matches(isDisplayed()));
         onView(withId(R.id.tv_step_full_description)).check(matches(isDisplayed()));
-        StepDetailsFragment fragment = new StepDetailsFragment();
         //onData(anything()).inAdapterView(withId(R.id.lv_steps)).atPosition(0).perform(click());
 
         //intended(allOf(hasComponent(StepDetailsFragment.class.getName()), (hasExtra("steps", steps)), hasExtra("id", id)));
@@ -83,5 +86,35 @@ public class StepsFragmentTest {
         onView(withId(R.id.tv_step_full_description)).check(matches(withText(STEP_FULL_DESCRIPTION)));
     }
 
-    
+    @Test
+    public void clickNextButton_DisplaysNextStepDetails() {
+
+
+        // onView(withId(R.id.recipe_container)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_next)).check(matches(isDisplayed()));
+        //onData(anything()).inAdapterView(withId(R.id.lv_steps)).atPosition(0).perform(click());
+
+        //intended(allOf(hasComponent(StepDetailsFragment.class.getName()), (hasExtra("steps", steps)), hasExtra("id", id)));
+        // Checks that the OrderActivity opens with the correct tea name displayed
+
+        onView(withId(R.id.btn_next)).perform(click());
+        onView(withId(R.id.tv_step_full_description)).check(matches(withText(NEXT_STEP_FULL_DESCRIPTION)));
+    }
+
+
+    @Test
+    public void clickPreviousButton_DisplaysNextStepDetails() {
+
+
+        // onView(withId(R.id.recipe_container)).check(matches(isDisplayed()));
+        onView(withId(R.id.btn_previous)).check(matches(isDisplayed()));
+        //onData(anything()).inAdapterView(withId(R.id.lv_steps)).atPosition(0).perform(click());
+
+        //intended(allOf(hasComponent(StepDetailsFragment.class.getName()), (hasExtra("steps", steps)), hasExtra("id", id)));
+        // Checks that the OrderActivity opens with the correct tea name displayed
+
+        onView(withId(R.id.btn_previous)).perform(click());
+        onView(withId(R.id.tv_step_full_description)).check(matches(withText(PREVIOUS_STEP_FULL_DESCRIPTION)));
+    }
+
 }

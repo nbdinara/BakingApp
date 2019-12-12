@@ -30,7 +30,7 @@ public class MainActivityScreenTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-    
+
     /**
      * Clicks on a GridView item and checks it opens up the RecipeDetailsActivity with the correct
      * recipe name, ingredients list and steps list.
