@@ -7,4 +7,5 @@
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
+    <color name="colorTransparentDark">#30212121</color>
 </resources>

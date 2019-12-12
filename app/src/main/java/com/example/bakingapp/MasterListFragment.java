@@ -5,11 +5,15 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -81,7 +85,7 @@ public class MasterListFragment extends Fragment {
             if (mAdapter == null) {
                 mAdapter = new MasterListAdapter(getContext(), mSteps);
                 stepsListView.setAdapter(mAdapter);
-                updateStepsListViewHeight(mAdapter, stepsListView);
+                updateIngredientsListViewHeight(stepsListView);
 
                 stepsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -101,7 +105,7 @@ public class MasterListFragment extends Fragment {
                 ListView ingredientsListView = rootView.findViewById(R.id.lv_ingredients);
 
                 ingredientsListView.setAdapter(mIngredientsAdapter);
-                updateIngredientsListViewHeight(mIngredientsAdapter, ingredientsListView);
+                updateIngredientsListViewHeight(ingredientsListView);
 
             }
 
@@ -132,38 +136,36 @@ public class MasterListFragment extends Fragment {
         currentState.putParcelableArrayList(INGREDIENTS_LIST, (ArrayList<Ingredient>) mIngredients);
     }
 
-    public static void updateIngredientsListViewHeight(MasterIngredientsListAdapter mIngredientsAdapter,
-                                                       ListView mIngredientsListView) {
-        if (mIngredientsAdapter == null) {
+    public static void updateIngredientsListViewHeight(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
             return;
-        }
 
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
         int totalHeight = 0;
-        int adapterCount = mIngredientsAdapter.getCount();
-        int listWidth = mIngredientsListView.getMeasuredWidth();
+        View view = null;
+        int i;
+        for (i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
 
-        for (int size = 0; size < adapterCount; size++) {
-            View mView = mIngredientsAdapter.getView(size, null, mIngredientsListView);
-
-            mView.measure(
-                    View.MeasureSpec.makeMeasureSpec(listWidth, View.MeasureSpec.EXACTLY),
-
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-
-            totalHeight += mView.getMeasuredHeight();
         }
-        // Change Height of ListView
-        ViewGroup.LayoutParams params = mIngredientsListView.getLayoutParams();
-        params.height = (totalHeight
-                + (mIngredientsListView.getDividerHeight() * (adapterCount-1)));
-        mIngredientsListView.setLayoutParams(params);
-        //mIngredientsListView.requestLayout();
+
+        //add divider height to total height as many items as there are in listview
+        totalHeight += listView.getDividerHeight()*i;
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
 
     }
 
     public static void updateStepsListViewHeight(MasterListAdapter mStepsAdapter,
                                                  ListView mStepsListView) {
+
         if (mStepsAdapter == null) {
             return;
         }

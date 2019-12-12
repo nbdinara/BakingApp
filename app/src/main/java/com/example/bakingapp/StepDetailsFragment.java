@@ -214,8 +214,10 @@ public class StepDetailsFragment extends Fragment {
     public void onSaveInstanceState(Bundle currentState) {
         currentState.putParcelableArrayList(STEPS_LIST, (ArrayList<Step>) mSteps);
         currentState.putInt(STEP_INDEX, mId);
-        currentState.putLong(PLAYER_CURRENT_POS, Math.max(0, mExoPlayer.getCurrentPosition()));
-        currentState.putBoolean(PLAYER_IS_READY, mExoPlayer.getPlayWhenReady());
+        if (mExoPlayer != null) {
+            currentState.putLong(PLAYER_CURRENT_POS, Math.max(0, mExoPlayer.getCurrentPosition()));
+            currentState.putBoolean(PLAYER_IS_READY, mExoPlayer.getPlayWhenReady());
+        }
     }
 
     @Override
