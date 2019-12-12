@@ -13,7 +13,6 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.CursorMatchers.withRowString;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
@@ -30,20 +29,18 @@ public class MainActivityScreenTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     /**
-     * Clicks on a GridView item and checks it opens up the OrderActivity with the correct details.
+     * Clicks on a GridView item and checks it opens up the RecipeDetailsActivity with the correct
+     * recipe name, ingredients list and steps list.
      */
     @Test
     public void clickGridViewItem_OpensOrderActivity() {
 
 
-        // Uses {@link Espresso#onData(org.hamcrest.Matcher)} to get a reference to a specific
-        // gridview item and clicks it.
-        //onData(anything()).inAdapterView(withId(R.id.rv_recipes)).atPosition(0).perform(click());
+
         onView(withId(R.id.rv_recipes)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
 
-        // Checks that the OrderActivity opens with the correct tea name displayed
         onView(withId(R.id.tv_recipe_name_header)).check(matches(withText(RECIPE_NAME)));
 
         onData(anything()).inAdapterView(withId(R.id.lv_ingredients)).atPosition(1)
