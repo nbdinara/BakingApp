@@ -101,6 +101,7 @@ public class StepsFragmentTest {
         onView(withId(R.id.tv_step_full_description)).check(matches(withText(NEXT_STEP_FULL_DESCRIPTION)));
     }
 
+    //only for mobile
 
     @Test
     public void clickPreviousButton_DisplaysNextStepDetails() {
