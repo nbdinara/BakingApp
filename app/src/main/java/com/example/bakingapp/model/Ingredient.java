@@ -15,7 +15,7 @@ import static androidx.room.ForeignKey.CASCADE;
 @Entity(tableName = "ingredient", indices = {@Index("recipe_id")},
         foreignKeys = @ForeignKey(
         entity = Recipe.class,
-        parentColumns = "recipe_id",
+        parentColumns = "id",
         childColumns = "recipe_id",
         onDelete = CASCADE))
 
@@ -49,22 +49,12 @@ public class Ingredient  implements Parcelable {
     }
 
     @Ignore
-    public Ingredient(double quantity, String measure, String ingredient, int recipeId){
-        this.quantity = quantity;
-        this.measure = measure;
-        this.ingredient = ingredient;
-        this.recipeId = recipeId;
-
-    }
-
-    @Ignore
     protected Ingredient(Parcel in) {
         this.id = in.readInt();
         quantity = in.readDouble();
         measure  = in.readString();
         ingredient = in.readString();
         this.recipeId = in.readInt();
-
     }
 
     public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {

@@ -9,26 +9,27 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "recipe")
 public class Recipe implements Parcelable {
 
     @PrimaryKey(autoGenerate = false)
-    private int recipe_id;
+    private int id;
     @ColumnInfo(name = "name")
     private String name;
     @Ignore
-    private ArrayList<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
     @Ignore
-    private ArrayList<Step> steps;
+    private List<Step> steps;
     @ColumnInfo(name = "serving")
     private int serving;
     @ColumnInfo(name = "image")
     private String image;
 
 
-    public Recipe (int recipe_id, String name, int serving, String image){
-        this.recipe_id = recipe_id;
+    public Recipe (int id, String name, int serving, String image){
+        this.id = id;
         this.name = name;
         this.serving = serving;
         this.image = image;
@@ -36,26 +37,21 @@ public class Recipe implements Parcelable {
 
     @Ignore
     protected Recipe(Parcel in) {
-        recipe_id = in.readInt();
+        id = in.readInt();
         name  = in.readString();
+        ingredients = in.readParcelableList(ingredients, Ingredient.class.getClassLoader());
+        steps = in.readParcelableList(steps, Step.class.getClassLoader());
         serving = in.readInt();
         image = in.readString();
     }
 
     @Ignore
-    public Recipe (int recipe_id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps,
+    public Recipe (int id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps,
                    int serving, String image){
-        this.recipe_id = recipe_id;
+        this.id = id;
         this.name = name;
         this.ingredients = ingredients;
         this.steps = steps;
-        this.serving = serving;
-        this.image = image;
-    }
-
-    @Ignore
-    public Recipe (String name, int serving, String image){
-        this.name = name;
         this.serving = serving;
         this.image = image;
     }
@@ -79,19 +75,19 @@ public class Recipe implements Parcelable {
     }
 
 
-    public int getRecipe_id() {
-        return recipe_id;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public ArrayList<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public ArrayList<Step> getSteps() {
+    public List<Step> getSteps() {
         return steps;
     }
 
@@ -106,8 +102,10 @@ public class Recipe implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
 
-        parcel.writeInt(recipe_id);
+        parcel.writeInt(id);
         parcel.writeString(name);
+        parcel.writeList(ingredients);
+        parcel.writeList(steps);
         parcel.writeInt(serving);
         parcel.writeString(image);
     }

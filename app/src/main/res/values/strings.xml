@@ -2,16 +2,19 @@
     <string name="app_name">BakingApp</string>
     <string name="error_message">Can not load the data. An error has occurred.</string>
     <string name="tv_recipe_name_example">Cheesecake</string>
-    <string name="tv_recipe_serving_example">Serving: 6</string>
+    <string name="tv_recipe_serving_example">Serving: %s</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">Baking App</string>
     <string name="add_widget">Add widget</string>
+    <string name="tv_ingredients_label">Ingredients</string>
+    <string name="tv_steps_label">Steps</string>
 
-    <string name="country_prompt">Choose a recipe</string>
+    <string name="select_recipe">Choose a recipe</string>
+    <string name="widget_configure_text">Choose a recipe from the list bellow</string>
 
 
 </resources>

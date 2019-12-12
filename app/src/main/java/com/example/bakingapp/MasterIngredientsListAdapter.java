@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.bakingapp.model.Ingredient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MasterIngredientsListAdapter extends ArrayAdapter<Ingredient> {
@@ -20,11 +21,11 @@ public class MasterIngredientsListAdapter extends ArrayAdapter<Ingredient> {
     private Context mContext;
     //private List<Ingredient> mIngredients;
     private int mLayoutResourceId;
-    private ArrayList<Ingredient> mIngredients = new ArrayList<>();
+    private List<Ingredient> mIngredients = new ArrayList<>();
 
 
 
-    public MasterIngredientsListAdapter(Context context, int layoutResourceId, ArrayList<Ingredient> ingredients) {
+    public MasterIngredientsListAdapter(Context context, int layoutResourceId, List<Ingredient> ingredients) {
         super(context, layoutResourceId, ingredients);
 
         mContext = context;

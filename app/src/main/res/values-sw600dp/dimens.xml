@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ingredients_height">400dp</dimen>
+    <dimen name="steps_height">750dp</dimen>
+    <dimen name="widget_margin">0dp</dimen>
+
+</resources>

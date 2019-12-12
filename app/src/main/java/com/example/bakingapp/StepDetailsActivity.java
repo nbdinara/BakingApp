@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+
 import com.example.bakingapp.model.Step;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class StepDetailsActivity extends AppCompatActivity {
             id = intentThatStartedThisActivity.getIntExtra("recipe_id", 0);
             Log.d(TAG, "Mysteps2: " + mSteps.size() + "   recipe_id " + id);
         }
+
 
         if (savedInstanceState == null) {
 

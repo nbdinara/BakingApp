@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.bakingapp.database.AppDatabase;
 
-public class MainIdViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class RecipeDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
 
     private final AppDatabase mDb;
     private final int mRecipeId;
 
 
-    public MainIdViewModelFactory(AppDatabase database, int recipeId) {
+    public RecipeDetailsViewModelFactory(AppDatabase database, int recipeId) {
         mDb = database;
         mRecipeId = recipeId;
     }
@@ -20,6 +20,6 @@ public class MainIdViewModelFactory extends ViewModelProvider.NewInstanceFactory
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         //noinspection unchecked
-        return (T) new MainIdViewModel(mDb, mRecipeId);
+        return (T) new RecipeDetailsViewModel(mDb, mRecipeId);
     }
 }

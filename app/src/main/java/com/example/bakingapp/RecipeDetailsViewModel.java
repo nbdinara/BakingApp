@@ -16,11 +16,13 @@ public class RecipeDetailsViewModel extends ViewModel {
 
     private LiveData<List<Ingredient>> ingredients;
     private LiveData<List<Step>> steps;
+    private LiveData<Recipe> recipe;
 
 
     public RecipeDetailsViewModel(AppDatabase database, int recipeId) {
         steps = database.stepDao().loadStepByRecipeId(recipeId);
         ingredients = database.ingredientDao().loadIngredientsByRecipeId(recipeId);
+        recipe = database.recipeDao().loadRecipeById(recipeId);
     }
 
     public LiveData<List<Ingredient>> getIngredients() {
@@ -30,5 +32,8 @@ public class RecipeDetailsViewModel extends ViewModel {
     public LiveData<List<Step>> getSteps() {
         return steps;
     }
-}
 
+    public LiveData<Recipe> getRecipe(){
+        return recipe;
+    }
+}

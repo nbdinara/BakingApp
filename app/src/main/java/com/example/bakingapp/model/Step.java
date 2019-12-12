@@ -12,17 +12,19 @@ import androidx.room.PrimaryKey;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "step", foreignKeys = @ForeignKey(
+@Entity(tableName = "step", indices = {@Index("recipe_id")},
+        foreignKeys = @ForeignKey(
         entity = Recipe.class,
-        parentColumns = "recipe_id",
+        parentColumns = "id",
         childColumns = "recipe_id",
-        onDelete = CASCADE), indices = {@Index("recipe_id")})
+        onDelete = CASCADE))
+
 public class Step implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @ColumnInfo(name = "index")
-    private int index;
+    @ColumnInfo(name = "step_order")
+    private int stepOrder;
     @ColumnInfo(name = "short_description")
     private String shortDescription;
     @ColumnInfo(name = "description")
@@ -35,10 +37,10 @@ public class Step implements Parcelable {
     private int recipeId;
 
 
-    public Step (int id, int index, String shortDescription, String description, String videoURL,
+    public Step (int id, int stepOrder, String shortDescription, String description, String videoURL,
                  String thumbnailURL, int recipeId){
         this.id = id;
-        this.index = index;
+        this.stepOrder = stepOrder;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
@@ -48,31 +50,23 @@ public class Step implements Parcelable {
 
     @Ignore
     protected Step(Parcel in) {
-        index = in.readInt();
+        id = in.readInt();
+        stepOrder = in.readInt();
         shortDescription  = in.readString();
         description = in.readString();
         videoURL = in.readString();
         thumbnailURL = in.readString();
+        recipeId = in.readInt();
     }
 
     @Ignore
-    public Step (int index, String shortDescription, String description, String videoURL, String thumbnailURL){
-        this.index = index;
+    public Step (int id, int stepOrder, String shortDescription, String description, String videoURL, String thumbnailURL){
+        this.id = id;
+        this.stepOrder = stepOrder;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoURL = videoURL;
         this.thumbnailURL = thumbnailURL;
-    }
-
-    @Ignore
-    public Step (int index, String shortDescription, String description, String videoURL,
-                 String thumbnailURL, int recipeId){
-        this.index = index;
-        this.shortDescription = shortDescription;
-        this.description = description;
-        this.videoURL = videoURL;
-        this.thumbnailURL = thumbnailURL;
-        this.recipeId = recipeId;
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {
@@ -89,6 +83,10 @@ public class Step implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public int getStepOrder() {
+        return stepOrder;
     }
 
     public String getShortDescription() {
@@ -111,10 +109,6 @@ public class Step implements Parcelable {
         return recipeId;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -124,10 +118,12 @@ public class Step implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
 
         parcel.writeInt(id);
+        parcel.writeInt(stepOrder);
         parcel.writeString(shortDescription);
         parcel.writeString(description);
         parcel.writeString(videoURL);
         parcel.writeString(thumbnailURL);
+        parcel.writeInt(recipeId);
     }
 
 }

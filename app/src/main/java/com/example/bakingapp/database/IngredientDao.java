@@ -19,6 +19,9 @@ public interface IngredientDao {
     @Query("SELECT * FROM ingredient")
     LiveData<List<Ingredient>> loadIngredients();
 
+    @Query("SELECT * FROM ingredient")
+    LiveData<List<Ingredient>> loadAllIngredients();
+
     @Insert
     void insertIngredient(Ingredient ingredient);
 }
